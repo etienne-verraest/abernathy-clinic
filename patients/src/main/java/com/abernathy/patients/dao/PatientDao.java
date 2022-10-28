@@ -18,4 +18,8 @@ public class PatientDao {
 		return patientRepository.findAll();
 	}
 
+	public Patient getPatientByFirstNameAndLastName(String firstName, String lastName) {
+		return patientRepository.findByFirstNameAndLastName(firstName, lastName);
+	}
+
 }

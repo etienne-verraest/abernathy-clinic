@@ -8,4 +8,5 @@ import com.abernathy.patients.model.Patient;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
+	Patient findByFirstNameAndLastName(String firstName, String lastName);
 }
