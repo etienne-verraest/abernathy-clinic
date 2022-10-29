@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 
+import com.abernathy.patients.validation.Phone;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +21,12 @@ public class AddPatientDto {
 
 	private Date dateOfBirth;
 
-	private char gender;
+	@NotBlank
+	private String gender;
 
+	@NotBlank
 	private String address;
 
+	@Phone
 	private String phone;
 }
