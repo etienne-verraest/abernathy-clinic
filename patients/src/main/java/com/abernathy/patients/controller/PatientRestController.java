@@ -2,6 +2,8 @@ package com.abernathy.patients.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,8 +57,14 @@ public class PatientRestController {
 		return new ResponseEntity<>(possiblePatients, HttpStatus.OK);
 	}
 
+	/**
+	 * This method creates a patient in database. Fields must be validated in order to be saved
+	 *
+	 * @param addPatientDto							AddPatientDto containing fields to add Patient
+	 * @return										Patient if fields are valid
+	 */
 	@PostMapping("/patient")
-	public ResponseEntity<Patient> registerPatient(@RequestBody AddPatientDto addPatientDto) {
+	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody AddPatientDto addPatientDto) {
 		Patient patient = modelMapper.map(addPatientDto, Patient.class);
 		patient = patientDao.savePatient(patient);
 		return new ResponseEntity<>(patient, HttpStatus.CREATED);

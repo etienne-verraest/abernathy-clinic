@@ -31,7 +31,7 @@ public class Patient {
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
 
-	private char gender;
+	private String gender;
 
 	private String address;
 
