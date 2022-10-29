@@ -46,4 +46,9 @@ public class PatientDao {
 		return patients;
 	}
 
+	public Patient savePatient(Patient patient) {
+		patientRepository.save(patient);
+		return patient;
+	}
+
 }
