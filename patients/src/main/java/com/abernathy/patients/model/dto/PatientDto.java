@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AddPatientDto {
+public class PatientDto {
 
 	@NotBlank
 	private String firstName;
