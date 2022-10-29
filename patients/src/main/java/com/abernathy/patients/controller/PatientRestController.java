@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.AddPatientDto;
+import com.abernathy.patients.util.ErrorBuilder;
 
 @RestController
 @RequestMapping("api/")
@@ -61,12 +63,21 @@ public class PatientRestController {
 	 *
 	 * @param addPatientDto							AddPatientDto containing fields to add Patient
 	 * @return										Patient if fields are valid
+	 * @throws IncorrectFieldValueException
 	 */
 	@PostMapping("/patients")
-	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody AddPatientDto addPatientDto) {
+	public ResponseEntity<String> registerPatient(@Valid @RequestBody AddPatientDto addPatientDto, Errors errors) {
+
+		// Check if validation contains errors, if it's the case an error message is
+		// returned
+		if (errors.hasErrors()) {
+			return ErrorBuilder.buildErrorMessage(errors);
+		}
+
+		// If there is no error, then we create the patient in database
 		Patient patient = modelMapper.map(addPatientDto, Patient.class);
 		patient = patientDao.savePatient(patient);
-		return new ResponseEntity<>(patient, HttpStatus.CREATED);
+		return new ResponseEntity<>(patient.toString(), HttpStatus.CREATED);
 	}
 
 }
