@@ -2,11 +2,13 @@ package com.abernathy.patients.dao;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
+import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.repository.PatientRepository;
 
 @Component
@@ -14,6 +16,9 @@ public class PatientDao {
 
 	@Autowired
 	PatientRepository patientRepository;
+
+	@Autowired
+	ModelMapper modelMapper;
 
 	/**
 	 * Find all patients registered in the clinic
@@ -46,9 +51,25 @@ public class PatientDao {
 		return patients;
 	}
 
+	/**
+	 * Creates a patient in database
+	 *
+	 * @param patient							Patient : the object to save in the database
+	 * @return									Return the populated object
+	 */
 	public Patient savePatient(Patient patient) {
 		patientRepository.save(patient);
 		return patient;
+	}
+
+	/**
+	 * Map Data Transfer Object to entity
+	 *
+	 * @param patientDto						PatientDto : The DTO to transform
+	 * @return									An Entity object
+	 */
+	public Patient mapToEntity(PatientDto patientDto) {
+		return modelMapper.map(patientDto, Patient.class);
 	}
 
 }
