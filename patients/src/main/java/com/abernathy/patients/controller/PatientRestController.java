@@ -2,10 +2,13 @@ package com.abernathy.patients.controller;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
+import com.abernathy.patients.model.dto.AddPatientDto;
 
 @RestController
 @RequestMapping("api/")
@@ -20,6 +24,9 @@ public class PatientRestController {
 
 	@Autowired
 	PatientDao patientDao;
+
+	@Autowired
+	ModelMapper modelMapper;
 
 	/**
 	 * This method returns every patients registered in the clinic
@@ -46,6 +53,13 @@ public class PatientRestController {
 			@RequestParam String lastName) throws PatientNotFoundException {
 		List<Patient> possiblePatients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
 		return new ResponseEntity<>(possiblePatients, HttpStatus.OK);
+	}
+
+	@PostMapping("/patient")
+	public ResponseEntity<Patient> registerPatient(@RequestBody AddPatientDto addPatientDto) {
+		Patient patient = modelMapper.map(addPatientDto, Patient.class);
+		patient = patientDao.savePatient(patient);
+		return new ResponseEntity<>(patient, HttpStatus.CREATED);
 	}
 
 }
