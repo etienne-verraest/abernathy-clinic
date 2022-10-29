@@ -1,9 +1,8 @@
 package com.abernathy.patients.model.dto;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotBlank;
 
+import com.abernathy.patients.validation.DateOfBirth;
 import com.abernathy.patients.validation.Phone;
 
 import lombok.Data;
@@ -19,7 +18,8 @@ public class AddPatientDto {
 	@NotBlank
 	private String lastName;
 
-	private Date dateOfBirth;
+	@DateOfBirth
+	private String dateOfBirth;
 
 	@NotBlank
 	private String gender;
