@@ -1,7 +1,5 @@
 package com.abernathy.patients.model;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +27,7 @@ public class Patient {
 	private String lastName;
 
 	@Column(name = "date_of_birth")
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	private String gender;
 

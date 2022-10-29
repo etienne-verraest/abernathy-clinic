@@ -31,28 +31,27 @@ public class PatientRestController {
 	ModelMapper modelMapper;
 
 	/**
-	 * This method returns every patients registered in the clinic
-	 *
-	 * @return										ResponseEntity : List<Patient> containing every patient
-	 */
-	@GetMapping("/patients")
-	public ResponseEntity<List<Patient>> getPatients() {
-		List<Patient> patients = patientDao.getPatients();
-		return new ResponseEntity<>(patients, HttpStatus.OK);
-	}
-
-	/**
-	 * This method returns possible patients for a given first name and last name.
+	 * This method returns every patient if optional params are not filled.
+	 * Otherwise this method returns possible patients for a given first name and last name.
 	 * Because the method can return duplicates, we use a List instead of a single Patient object.
 	 *
-	 * @param firstName								String : the first name of the patient
-	 * @param lastName								String : the last name of the patient
+	 * @param firstName								String (optional) : the first name of the patient
+	 * @param lastName								String (optional) : the last name of the patient
 	 * @return										ResponseEntity of possible patients found
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
-	@GetMapping("/patient")
-	public ResponseEntity<List<Patient>> getPossiblePatientsByFirstNameAndLastName(@RequestParam String firstName,
-			@RequestParam String lastName) throws PatientNotFoundException {
+	@GetMapping("/patients")
+	public ResponseEntity<List<Patient>> getPatients(@RequestParam(required = false) String firstName,
+			@RequestParam(required = false) String lastName) throws PatientNotFoundException {
+
+		// If one or both params are null, then we return every patients
+		if (firstName == null || lastName == null) {
+			List<Patient> patients = patientDao.getPatients();
+			return new ResponseEntity<>(patients, HttpStatus.OK);
+		}
+
+		// Otherwise, we get a list of possible patients based on their first and last
+		// name
 		List<Patient> possiblePatients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
 		return new ResponseEntity<>(possiblePatients, HttpStatus.OK);
 	}
@@ -63,7 +62,7 @@ public class PatientRestController {
 	 * @param addPatientDto							AddPatientDto containing fields to add Patient
 	 * @return										Patient if fields are valid
 	 */
-	@PostMapping("/patient")
+	@PostMapping("/patients")
 	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody AddPatientDto addPatientDto) {
 		Patient patient = modelMapper.map(addPatientDto, Patient.class);
 		patient = patientDao.savePatient(patient);
