@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abernathy.patients.dao.PatientDao;
+import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
@@ -62,12 +63,13 @@ public class PatientRestController {
 	 * @throws IncorrectFieldValueException
 	 */
 	@PostMapping("/patients")
-	public ResponseEntity<String> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors) {
+	public ResponseEntity<String> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
+			throws IncorrectFieldValueException {
 
 		// Check if validation contains errors, if it's the case an error message is
 		// returned
 		if (errors.hasErrors()) {
-			return ErrorBuilder.buildErrorMessage(errors);
+			ErrorBuilder.buildErrorMessage(errors);
 		}
 
 		// If there is no error, then we create the patient in database

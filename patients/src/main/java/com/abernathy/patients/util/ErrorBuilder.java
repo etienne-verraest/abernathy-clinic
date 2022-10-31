@@ -1,12 +1,12 @@
 package com.abernathy.patients.util;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+
+import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 
 public class ErrorBuilder {
 
-	public static ResponseEntity<String> buildErrorMessage(Errors errors) {
+	public static void buildErrorMessage(Errors errors) throws IncorrectFieldValueException {
 		// Create a StringBuilder that will contain incorrect fields values
 		StringBuilder errorString = new StringBuilder();
 
@@ -17,7 +17,7 @@ public class ErrorBuilder {
 		String finalString = errorString.substring(0, errorString.length() - 2);
 
 		// Returning the error message with fields
-		return new ResponseEntity<>("The following fields are incorrect : " + finalString + "\n"
-				+ "Please check the documentation for more information", HttpStatus.BAD_REQUEST);
+		throw new IncorrectFieldValueException("The following fields are incorrect : " + finalString + "\n"
+				+ "Please check the documentation for more information");
 	}
 }
