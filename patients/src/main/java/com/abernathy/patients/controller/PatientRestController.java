@@ -22,7 +22,6 @@ import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
-import com.abernathy.patients.util.IdGeneratorUtil;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
 @RestController
@@ -53,16 +52,15 @@ public class PatientRestController {
 			return new ResponseEntity<>(patient, HttpStatus.OK);
 		}
 
-		// If one or more parameters are null, then we return every patients
-		if (firstName == null || lastName == null) {
-			List<Patient> patients = patientDao.getPatients();
-			return new ResponseEntity<>(patients, HttpStatus.OK);
+		// If first name and last name is set then we fetch patients by their names
+		if (firstName != null && lastName != null) {
+			List<Patient> possiblePatients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
+			return new ResponseEntity<>(possiblePatients, HttpStatus.OK);
 		}
 
-		// Otherwise, we get a list of possible patients based on their first and last
-		// name
-		List<Patient> possiblePatients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
-		return new ResponseEntity<>(possiblePatients, HttpStatus.OK);
+		// Otherwise we return a list of every patients
+		List<Patient> patients = patientDao.getPatients();
+		return new ResponseEntity<>(patients, HttpStatus.OK);
 	}
 
 	/**
@@ -84,10 +82,6 @@ public class PatientRestController {
 
 		// If there is no error, then we create the patient in database
 		Patient patient = patientDao.mapToEntity(addPatientDto);
-
-		// Based on the informations we are given we generate a unique identifier
-		patient.setId(IdGeneratorUtil.generateIdentifier(patient));
-
 		patient = patientDao.savePatient(patient);
 		return new ResponseEntity<>(patient, HttpStatus.CREATED);
 	}
@@ -113,14 +107,10 @@ public class PatientRestController {
 		}
 
 		// Fetching patient from database, if nobody was found an exception is thrown
-		Patient patientEntity = patientDao.getPatientById(id);
-
 		// Update patient with new information, the id generated is saved and not
 		// re-generated on update
-		updatePatientDto.setId(patientEntity.getId());
 		Patient patient = patientDao.mapToEntity(updatePatientDto);
-		patient = patientDao.savePatient(patient);
-
+		patient = patientDao.updatePatient(patient, patientDao.getPatientById(id).getId());
 		return new ResponseEntity<>(patient, HttpStatus.OK);
 	}
 

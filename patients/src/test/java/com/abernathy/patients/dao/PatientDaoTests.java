@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.repository.PatientRepository;
@@ -129,6 +128,30 @@ class PatientDaoTests {
 		// ASSERT
 		assertThat(response.getFirstName()).isEqualTo("Alpha");
 		verify(patientRepositoryMock, times(1)).save(patientMock);
+
+	}
+
+	@Test
+	void testUpdatePatient_ShouldReturn_UpdatedPatient() {
+
+		// ARRANGE
+		Patient patientUpdateMock = new Patient();
+		patientUpdateMock.setFirstName("Alpha");
+		patientUpdateMock.setLastName("Bravo");
+		patientUpdateMock.setDateOfBirth("1998-02-16");
+		patientUpdateMock.setAddress("456 New Street");
+		patientUpdateMock.setGender("M");
+		patientUpdateMock.setPhone("000-000-0000");
+		patientUpdateMock.setId("AB10000");
+		when(patientRepositoryMock.save(any(Patient.class))).thenReturn(patientUpdateMock);
+
+		// ACT
+		Patient response = patientDaoMock.updatePatient(patientUpdateMock, "AB10000");
+
+		// ASSERT
+		assertThat(response.getFirstName()).isEqualTo("Alpha");
+		assertThat(response.getAddress()).isEqualTo("456 New Street");
+		verify(patientRepositoryMock, times(1)).save(patientUpdateMock);
 
 	}
 
