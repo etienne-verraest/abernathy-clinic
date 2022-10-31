@@ -69,7 +69,7 @@ public class PatientDao {
 	}
 
 	/**
-	 * Creates a patient in database
+	 * Creates or updates a patient in database
 	 *
 	 * @param patient							Patient : the object to save in the database
 	 * @return									Return the populated object
