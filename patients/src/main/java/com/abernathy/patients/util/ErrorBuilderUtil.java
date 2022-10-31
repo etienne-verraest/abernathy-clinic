@@ -4,7 +4,7 @@ import org.springframework.validation.Errors;
 
 import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 
-public class ErrorBuilder {
+public class ErrorBuilderUtil {
 
 	public static void buildErrorMessage(Errors errors) throws IncorrectFieldValueException {
 		// Create a StringBuilder that will contain incorrect fields values
@@ -17,7 +17,6 @@ public class ErrorBuilder {
 		String finalString = errorString.substring(0, errorString.length() - 2);
 
 		// Returning the error message with fields
-		throw new IncorrectFieldValueException("The following fields are incorrect : " + finalString + "\n"
-				+ "Please check the documentation for more information");
+		throw new IncorrectFieldValueException("The following fields are incorrect : " + finalString);
 	}
 }

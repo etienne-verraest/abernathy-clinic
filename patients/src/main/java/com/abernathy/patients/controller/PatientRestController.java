@@ -20,7 +20,7 @@ import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
-import com.abernathy.patients.util.ErrorBuilder;
+import com.abernathy.patients.util.ErrorBuilderUtil;
 
 @RestController
 @RequestMapping("api/")
@@ -69,7 +69,7 @@ public class PatientRestController {
 		// Check if validation contains errors, if it's the case an error message is
 		// returned
 		if (errors.hasErrors()) {
-			ErrorBuilder.buildErrorMessage(errors);
+			ErrorBuilderUtil.buildErrorMessage(errors);
 		}
 
 		// If there is no error, then we create the patient in database
