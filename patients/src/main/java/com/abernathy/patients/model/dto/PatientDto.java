@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import com.abernathy.patients.validation.DateOfBirth;
 import com.abernathy.patients.validation.Gender;
 import com.abernathy.patients.validation.Phone;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PatientDto {
+
+	@JsonIgnore
+	private String id;
 
 	@NotBlank
 	private String firstName;
