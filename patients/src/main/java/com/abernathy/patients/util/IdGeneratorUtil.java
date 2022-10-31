@@ -6,6 +6,9 @@ import com.abernathy.patients.model.Patient;
 
 public class IdGeneratorUtil {
 
+	private IdGeneratorUtil() {
+	}
+
 	public static String generateIdentifier(Patient patient) {
 
 		StringBuilder id = new StringBuilder();
