@@ -1,4 +1,4 @@
-package com.abernathy.patients;
+package com.abernathy.patients.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

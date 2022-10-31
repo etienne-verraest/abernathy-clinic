@@ -1,4 +1,4 @@
-package com.abernathy.patients;
+package com.abernathy.patients.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
