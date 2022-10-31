@@ -44,7 +44,7 @@ class PatientDaoTests {
 	@BeforeAll
 	static void initalization() {
 
-		// Creating a mock patient for our operaation
+		// Creating a mock patient for our operations
 		patientMock = new Patient();
 		patientMock.setFirstName("Alpha");
 		patientMock.setLastName("Bravo");
