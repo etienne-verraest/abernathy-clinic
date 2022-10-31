@@ -11,6 +11,7 @@ import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.repository.PatientRepository;
+import com.abernathy.patients.util.IdGeneratorUtil;
 
 @Component
 public class PatientDao {
@@ -44,7 +45,6 @@ public class PatientDao {
 
 		List<Patient> patients = patientRepository.findByFirstNameAndLastName(firstName, lastName);
 
-		// Guard clause that check if the list is empty before returning anything
 		if (patients.isEmpty()) {
 			throw new PatientNotFoundException("The patient with given first name and last name was not found");
 		}
@@ -69,12 +69,28 @@ public class PatientDao {
 	}
 
 	/**
-	 * Creates or updates a patient in database
+	 * Creates a patient in database
+	 * Based on the informations we are given we generate a unique identifier (i.e : AB35678)
 	 *
 	 * @param patient							Patient : the object to save in the database
-	 * @return									Return the populated object
+	 * @return									Returns the created patient
 	 */
 	public Patient savePatient(Patient patient) {
+
+		patient.setId(IdGeneratorUtil.generateIdentifier(patient));
+		return patientRepository.save(patient);
+	}
+
+	/**
+	 * Updates a patient in database, given its id.
+	 * We do not regenerate the unique identifier, even if first and last name change
+	 *
+	 * @param patient							Patient : the object to update in the database
+	 * @param id								String : the id of the patient
+	 * @return									Returns the updated patient
+	 */
+	public Patient updatePatient(Patient patient, String id) {
+		patient.setId(id);
 		return patientRepository.save(patient);
 	}
 
