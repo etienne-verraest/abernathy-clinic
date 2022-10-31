@@ -23,9 +23,4 @@ public class ControllerExceptionHandler {
 		return new ErrorMessage(new Date(), HttpStatus.BAD_REQUEST, ex.getMessage());
 	}
 
-	@ExceptionHandler(RequiredParamNotSetException.class)
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public ErrorMessage handleRequiredParamNotSetException(Exception ex, WebRequest request) {
-		return new ErrorMessage(new Date(), HttpStatus.BAD_REQUEST, ex.getMessage());
-	}
 }
