@@ -1,6 +1,7 @@
 package com.abernathy.patients.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,29 @@ public class PatientDao {
 	}
 
 	/**
+	 * Return a patient found by its id
+	 * The method can't return duplicate because ID is a unique generated key
+	 *
+	 * @param id								String : the id of the patient to fetch
+	 * @return									Patient : A patient object containing patient informatoion
+	 * @throws PatientNotFoundException			Thrown if nobody was found
+	 */
+	public Patient getPatientById(String id) throws PatientNotFoundException {
+		Optional<Patient> patient = patientRepository.findById(id);
+		if (patient.isPresent()) {
+			return patient.get();
+		}
+		throw new PatientNotFoundException("The patient with given ID was not found.");
+	}
+
+	/**
 	 * Creates a patient in database
 	 *
 	 * @param patient							Patient : the object to save in the database
 	 * @return									Return the populated object
 	 */
 	public Patient savePatient(Patient patient) {
-		patientRepository.save(patient);
-		return patient;
+		return patientRepository.save(patient);
 	}
 
 	/**
@@ -70,6 +86,10 @@ public class PatientDao {
 	 */
 	public Patient mapToEntity(PatientDto patientDto) {
 		return modelMapper.map(patientDto, Patient.class);
+	}
+
+	public PatientDto mapToDto(Patient patient) {
+		return modelMapper.map(patient, PatientDto.class);
 	}
 
 }
