@@ -20,7 +20,7 @@ import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
-import com.abernathy.patients.util.ErrorBuilderUtil;
+import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
 @RestController
 @RequestMapping("api/")
@@ -63,19 +63,19 @@ public class PatientRestController {
 	 * @throws IncorrectFieldValueException
 	 */
 	@PostMapping("/patients")
-	public ResponseEntity<String> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
+	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
 			throws IncorrectFieldValueException {
 
 		// Check if validation contains errors, if it's the case an error message is
 		// returned
 		if (errors.hasErrors()) {
-			ErrorBuilderUtil.buildErrorMessage(errors);
+			ValidationErrorBuilderUtil.buildErrorMessage(errors);
 		}
 
 		// If there is no error, then we create the patient in database
 		Patient patient = patientDao.mapToEntity(addPatientDto);
 		patient = patientDao.savePatient(patient);
-		return new ResponseEntity<>(patient.toString(), HttpStatus.CREATED);
+		return new ResponseEntity<>(patient, HttpStatus.CREATED);
 	}
 
 }
