@@ -71,7 +71,6 @@ public class WebController {
 			model.addAttribute("patients", patients);
 			return "search";
 		}
-
 		return "index";
 	}
 }
