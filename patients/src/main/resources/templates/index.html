@@ -1,9 +1,35 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-	<title>Hello</title>
-	</head>
-	<body>
-		<h1>hello</h1>
-	</body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+    
+    <head>
+        <meta charset="utf-8"/>
+        <title>Abernathy Clinic - Home</title>
+        <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
+        <script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+    </head>
+        
+    <body>
+
+        <div class="container">
+            
+            <h1>Abernathy Clinic</h1>
+
+            <!-- Form to search a patient in the database -->
+            <form method="post" th:action="@{/search}" th:object="${searchPatientDto}">
+            
+                <label for="firstName" class="form-label fw-bold">First Name : </label>
+                <input th:field="*{firstName}" type="text" class="form-control" id="firstName" name="firstName">
+                <small th:errors="*{firstName}" class="text-danger">First Name validation error</small>
+                
+                <br>
+                <label for="lastName" class="form-label fw-bold">Last Name : </label>
+                <input th:field="*{lastName}" type="text" class="form-control" id="lastName" name="lastName">
+                <small th:errors="*{lastName}" class="text-danger">Last Name validation error</small>
+
+                <br><input type="submit" class="btn btn-primary mt-1" value="Search Patient">
+            </form>
+
+        </div>
+    </body>
 </html>
