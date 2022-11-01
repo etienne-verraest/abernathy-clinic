@@ -17,10 +17,10 @@ public class PatientDto {
 	@JsonIgnore
 	private String id;
 
-	@NotBlank
+	@NotBlank(message = "First name must not be blank")
 	private String firstName;
 
-	@NotBlank
+	@NotBlank(message = "Last name must not be blank")
 	private String lastName;
 
 	@DateOfBirth
@@ -29,7 +29,7 @@ public class PatientDto {
 	@Gender
 	private String gender;
 
-	@NotBlank
+	@NotBlank(message = "Address must not be blank")
 	private String address;
 
 	@Phone

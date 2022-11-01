@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
+import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.model.dto.webforms.SearchPatientDto;
 
 @Controller
@@ -24,10 +25,10 @@ public class WebController {
 	PatientDao patientDao;
 
 	/**
-	 * This method show the search patient form
+	 * This method show the "Search Patientt" Form
 	 *
-	 * @param searchPatientDto					SearchPatientDto containing fields for the form
-	 * @return									Show the search form
+	 * @param searchPatientDto						SearchPatientDto containing fields for the form
+	 * @return										search.html
 	 */
 	@GetMapping("/")
 	public String showSearchPatientForm(SearchPatientDto searchPatientDto) {
@@ -40,8 +41,7 @@ public class WebController {
 	 * If one patient is found, then we redirect to the patient view page.
 	 * Otherwise, we display search results with additionnal informations.
 	 *
-	 * @param searchPatientDto						SearchPatientDto containing filled fields
-	 * @return										Return different page based on the explanation
+	 * @param searchPatientDto						SearchPatientDto containing user defined datas
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@PostMapping("/search")
@@ -79,16 +79,48 @@ public class WebController {
 	}
 
 	/**
-	 * Show the patient information with its ID
+	 * Show patient's information, searched with ID
 	 *
 	 * @param id									String : the id of the patient
-	 * @return										PatientView.html
+	 * @return										patient/view.html
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@GetMapping("/search/{id}")
 	public String showPatientView(@PathVariable("id") String id, Model model) throws PatientNotFoundException {
 		Patient patient = patientDao.getPatientById(id);
 		model.addAttribute("patient", patient);
-		return "patientView";
+		return "patient/view";
+	}
+
+	/**
+	 * Show the form to add a patient. The form uses the same DTO as the api.
+	 * Hence, form will be validated with the same requirements as the api.
+	 *
+	 */
+	@GetMapping("/patient/add")
+	public String showAddPatientForm(Model model) {
+		model.addAttribute("patientDto", new PatientDto());
+		return "patient/add";
+	}
+
+	/**
+	 * Validate the "Add Patient" form.
+	 * If validation is correct, the user is redirected to the new user profile
+	 * Otherwise validation error messages are shown
+	 *
+	 * @param patientDto							PatientDto containing user defined datas
+	 *
+	 */
+	@PostMapping("/patient/add")
+	public String validateAddPatientForm(@Valid PatientDto patientDto, BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			return "patient/add";
+		}
+
+		Patient patient = patientDao.mapToEntity(patientDto);
+		patient = patientDao.savePatient(patient);
+		return "redirect:/search/" + patient.getId();
+
 	}
 }
