@@ -69,8 +69,7 @@ public class WebController {
 		// If there is only one patient found, then we directly display the patient view
 		// Otherwise we display search results of every patient found
 		if (patients.size() == 1) {
-			model.addAttribute("patient", patients.get(0));
-			return "patientView";
+			return "redirect:/search/" + patients.get(0).getId();
 		} else if (patients.size() >= 2) {
 			model.addAttribute("patients", patients);
 			return "search";
