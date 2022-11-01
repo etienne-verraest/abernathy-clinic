@@ -70,7 +70,7 @@ public class WebController {
 		// Otherwise we display search results of every patient found
 		if (patients.size() == 1) {
 			return "redirect:/search/" + patients.get(0).getId();
-		} else if (patients.size() >= 2) {
+		} else if (patients.size() > 1) {
 			model.addAttribute("patients", patients);
 			return "search";
 		}
