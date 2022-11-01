@@ -45,33 +45,37 @@ public class WebController {
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@PostMapping("/search")
-	public String validateSearchPatientForm(@Valid SearchPatientDto searchPatientDto, BindingResult result, Model model)
-			throws PatientNotFoundException {
+	public String validateSearchPatientForm(@Valid SearchPatientDto searchPatientDto, BindingResult result,
+			Model model) {
 
-		// If there are errors when searching for result we return the search form
+		// If there are validations errors on the search form, we display it again
 		if (result.hasErrors()) {
 			return "index";
 		}
 
-		// Otherwise we display search results
 		String firstName = searchPatientDto.getFirstName();
 		String lastName = searchPatientDto.getLastName();
-		List<Patient> patients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
+		List<Patient> patients;
 
-		// If Patient list is empty, then we redirect to the index page
-		if (patients.isEmpty()) {
-			result.rejectValue("firstName", "No patient were found");
+		// First we check for the PatientNotFoundException, if caught we display the
+		// search form again
+		try {
+			patients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
+		} catch (PatientNotFoundException e) {
+			result.rejectValue("firstName", "", e.getMessage());
 			return "index";
-		} // If Patient list size is equal to 1 we redirect directly to the view patient
-			// page
-		else if (patients.size() == 1) {
+		}
+
+		// If there is only one patient found, then we directly display the patient view
+		// Otherwise we display search results of every patient found
+		if (patients.size() == 1) {
 			model.addAttribute("patient", patients.get(0));
 			return "patientView";
-		} // Otherwise we display search results of every occurrences found
-		else if (patients.size() >= 2) {
+		} else if (patients.size() >= 2) {
 			model.addAttribute("patients", patients);
 			return "search";
 		}
+
 		return "index";
 	}
 
