@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SearchPatientDto {
 
-	@NotBlank
+	@NotBlank(message = "First name must not be blank")
 	private String firstName;
 
-	@NotBlank
+	@NotBlank(message = "First name must not be blank")
 	private String lastName;
 
 }
