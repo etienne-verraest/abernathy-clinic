@@ -26,8 +26,8 @@ import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = PatientRestController.class)
-class PatientRestControllerTests {
+@WebMvcTest(controllers = ApiController.class)
+class ApiControllerTests {
 
 	@Autowired
 	private MockMvc mockMvc;

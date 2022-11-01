@@ -26,7 +26,7 @@ import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
 @RestController
 @RequestMapping("api/")
-public class PatientRestController {
+public class ApiController {
 
 	@Autowired
 	PatientDao patientDao;
