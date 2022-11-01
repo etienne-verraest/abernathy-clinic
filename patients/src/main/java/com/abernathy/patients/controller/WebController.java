@@ -123,4 +123,38 @@ public class WebController {
 		return "redirect:/search/" + patient.getId();
 
 	}
+
+	/**
+	 * Show the form to edit a patient
+	 * Form will be filled with the fields corresponding to the datas of the patient
+	 *
+	 * @param id									String : the id of the patient
+	 * @throws PatientNotFoundException				Thrown if id was not found in database
+	 */
+	@GetMapping("/patient/update/{id}")
+	public String showUpdatePatientForm(@PathVariable("id") String id, Model model) throws PatientNotFoundException {
+		Patient patient = patientDao.getPatientById(id);
+		PatientDto patientDto = patientDao.mapToDto(patient);
+		model.addAttribute("patientDto", patientDto);
+		return "patient/edit";
+	}
+
+	/**
+	 * Validate the "Edit Patient" form.
+	 *
+	 * @param patientDto							PatientDto containing patient data
+	 * @return										User profile if validation is correct, otherwise throws error
+	 */
+	@PostMapping("/patient/update")
+	public String validateUpdatePatientForm(@Valid PatientDto patientDto, BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			return "patient/edit";
+		}
+
+		Patient patient = patientDao.mapToEntity(patientDto);
+		patient = patientDao.updatePatient(patient, patientDto.getId());
+		return "redirect:/search/" + patient.getId();
+
+	}
 }

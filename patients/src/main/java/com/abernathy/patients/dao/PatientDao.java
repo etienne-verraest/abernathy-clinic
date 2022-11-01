@@ -16,6 +16,9 @@ import com.abernathy.patients.util.IdGeneratorUtil;
 @Component
 public class PatientDao {
 
+	// TODO : Validation for first name and last name
+	// TODO : Save First & Last name in UPPERCASE format
+
 	@Autowired
 	PatientRepository patientRepository;
 
