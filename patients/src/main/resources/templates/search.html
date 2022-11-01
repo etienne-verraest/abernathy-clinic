@@ -26,9 +26,10 @@
                             <th>Date of Birth</th>
                             <th>Address</th>
                             <th>Phone Number</th>
-                            <th>Edit</th>
+                            <th>View</th>
                         </tr>
                     </thead>
+                    
                     <tbody>
                     <tr th:each="patient : ${patients}">
                             <td th:text="${patient.id}"></td>
@@ -38,7 +39,7 @@
                             <td th:text="${patient.address}"></td>
                             <td th:text="${patient.phone}"></td>
                             <td style="width: 15%" class="text-center">
-                                <a>Edit</a>
+                                <a th:href="@{|/search/${patient.id}|}">View</a>
                             </td>
                         </tr>
                     </tbody>
