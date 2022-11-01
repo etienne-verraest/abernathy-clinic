@@ -62,7 +62,7 @@ public class WebController {
 		try {
 			patients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
 		} catch (PatientNotFoundException e) {
-			result.rejectValue("firstName", "", e.getMessage());
+			model.addAttribute("message", e.getMessage());
 			return "index";
 		}
 
