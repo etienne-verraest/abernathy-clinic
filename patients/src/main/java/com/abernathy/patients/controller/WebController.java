@@ -86,8 +86,15 @@ public class WebController {
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@GetMapping("/search/{id}")
-	public String showPatientView(@PathVariable("id") String id, Model model) throws PatientNotFoundException {
-		Patient patient = patientDao.getPatientById(id);
+	public String showPatientView(@PathVariable("id") String id, Model model) {
+
+		Patient patient;
+		try {
+			patient = patientDao.getPatientById(id);
+		} catch (PatientNotFoundException e) {
+			return "redirect:/";
+		}
+
 		model.addAttribute("patient", patient);
 		return "patient/view";
 	}
@@ -132,8 +139,15 @@ public class WebController {
 	 * @throws PatientNotFoundException				Thrown if id was not found in database
 	 */
 	@GetMapping("/patient/update/{id}")
-	public String showUpdatePatientForm(@PathVariable("id") String id, Model model) throws PatientNotFoundException {
-		Patient patient = patientDao.getPatientById(id);
+	public String showUpdatePatientForm(@PathVariable("id") String id, Model model) {
+
+		Patient patient;
+		try {
+			patient = patientDao.getPatientById(id);
+		} catch (PatientNotFoundException e) {
+			return "redirect:/";
+		}
+
 		PatientDto patientDto = patientDao.mapToDto(patient);
 		model.addAttribute("patientDto", patientDto);
 		return "patient/edit";
