@@ -79,8 +79,9 @@ public class PatientDao {
 	 * @return									Returns the created patient
 	 */
 	public Patient savePatient(Patient patient) {
-
 		patient.setId(IdGeneratorUtil.generateIdentifier(patient));
+		patient.setFirstName(patient.getFirstName().toUpperCase());
+		patient.setLastName(patient.getLastName().toUpperCase());
 		return patientRepository.save(patient);
 	}
 
@@ -94,6 +95,8 @@ public class PatientDao {
 	 */
 	public Patient updatePatient(Patient patient, String id) {
 		patient.setId(id);
+		patient.setFirstName(patient.getFirstName().toUpperCase());
+		patient.setLastName(patient.getLastName().toUpperCase());
 		return patientRepository.save(patient);
 	}
 
