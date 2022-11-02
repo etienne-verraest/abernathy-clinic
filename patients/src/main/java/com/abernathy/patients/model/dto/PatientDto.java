@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 import com.abernathy.patients.validation.DateOfBirth;
 import com.abernathy.patients.validation.Gender;
+import com.abernathy.patients.validation.Name;
 import com.abernathy.patients.validation.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,10 +18,10 @@ public class PatientDto {
 	@JsonIgnore
 	private String id;
 
-	@NotBlank(message = "First name must not be blank")
+	@Name
 	private String firstName;
 
-	@NotBlank(message = "Last name must not be blank")
+	@Name
 	private String lastName;
 
 	@DateOfBirth
