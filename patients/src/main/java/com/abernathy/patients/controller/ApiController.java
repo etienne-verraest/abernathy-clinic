@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class ApiController {
 	PatientDao patientDao;
 
 	/**
-	 * This method returns every patient if optional params are not filled.
+	 * Returns every patient if Optional parameters are NOT filled.
 	 * Otherwise this method returns possible patients for a given first name and last name.
 	 * Because the method can return duplicates, we use a List instead of a single Patient object.
 	 *
@@ -64,11 +65,12 @@ public class ApiController {
 	}
 
 	/**
-	 * This method creates a patient in database. Fields must be validated in order to be saved
+	 * Creates a patient in database.
+	 * Fields must be validated in order to be saved
 	 *
 	 * @param addPatientDto								PatientDto containing fields to add Patient
 	 * @return											Patient if fields are valid
-	 * @throws IncorrectFieldValueException
+	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 */
 	@PostMapping("/patients")
 	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
@@ -87,7 +89,8 @@ public class ApiController {
 	}
 
 	/**
-	 * This method updates a patient in database, based on it's unique ID. Fields must be validated in order to be saved
+	 * Updates a patient in database, based on its ID.
+	 * Fields must be validated in order to be saved
 	 *
 	 * @param id										String (required) : the unique ID of the patient
 	 * @param updatePatientDto							PatientDto containing fields to update a patient
@@ -112,6 +115,27 @@ public class ApiController {
 		Patient patient = patientDao.mapToEntity(updatePatientDto);
 		patient = patientDao.updatePatient(patient, patientDao.getPatientById(id).getId());
 		return new ResponseEntity<>(patient, HttpStatus.OK);
+	}
+
+	/**
+	 * Deletes a patient from database, given its id.
+	 *
+	 * @param id										String : The id of the patient to deleted
+	 * @return											A message if the operation was successfull
+	 * @throws PatientNotFoundException					Thrown if nobody was found given
+	 */
+	@DeleteMapping("/patients/{id}")
+	public ResponseEntity<String> deletePatient(@PathVariable(required = true) String id)
+			throws PatientNotFoundException {
+
+		// Checking if patient with given id exists
+		if (id != null && patientDao.getPatientById(id) != null) {
+			if (patientDao.deletePatient(id)) {
+				return new ResponseEntity<>("Patient with id : " + id + "was successfully deleted", HttpStatus.OK);
+			}
+		}
+
+		throw new PatientNotFoundException("Patient with given ID was not found.");
 	}
 
 }

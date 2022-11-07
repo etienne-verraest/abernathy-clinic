@@ -98,6 +98,23 @@ public class PatientDao {
 	}
 
 	/**
+	 * Deletes a patient in database, given its id.
+	 *
+	 * @param id								String : The id of the patient to delete
+	 * @return									Returns true if the deletion was successfull
+	 * @throws PatientNotFoundException			Thrown if the patient with given ID is not found.
+	 */
+	public boolean deletePatient(String id) throws PatientNotFoundException {
+
+		if (patientRepository.findById(id).isPresent()) {
+			patientRepository.deleteById(id);
+			return true;
+		}
+
+		throw new PatientNotFoundException("The patient with given ID was not found.");
+	}
+
+	/**
 	 * Map Data Transfer Object to entity
 	 *
 	 * @param patientDto						PatientDto : The DTO to transform
@@ -107,6 +124,12 @@ public class PatientDao {
 		return modelMapper.map(patientDto, Patient.class);
 	}
 
+	/**
+	 * Map Entity to DTO
+	 *
+	 * @param patient							Patient : The Entity to transform
+	 * @return									A Patient DTO object
+	 */
 	public PatientDto mapToDto(Patient patient) {
 		return modelMapper.map(patient, PatientDto.class);
 	}
