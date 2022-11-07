@@ -3,6 +3,7 @@ package com.abernathy.patients.controller;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -162,7 +163,7 @@ class WebControllerTests {
 	}
 
 	@Test
-	void testShowUpdatePatientForm_Successful() throws Exception {
+	void testUpdatePatient_Successful() throws Exception {
 
 		// ARRANGE
 		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
@@ -173,4 +174,15 @@ class WebControllerTests {
 				.andExpect(status().isOk()).andExpect(model().attributeExists("patientDto"));
 	}
 
+	@Test
+	void testDeletePatient_Successful() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientDaoMock.deletePatient("AB10000")).thenReturn(true);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
+				.andExpect(status().is3xxRedirection()).andExpect(flash().attributeExists("message"));
+	}
 }
