@@ -131,7 +131,7 @@ public class ApiController {
 		// Checking if patient with given id exists
 		if (id != null && patientDao.getPatientById(id) != null) {
 			if (patientDao.deletePatient(id)) {
-				return new ResponseEntity<>("Patient with id : " + id + "was successfully deleted", HttpStatus.OK);
+				return new ResponseEntity<>("Patient with id : " + id + " was successfully deleted", HttpStatus.OK);
 			}
 		}
 
