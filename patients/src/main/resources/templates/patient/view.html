@@ -22,7 +22,7 @@
                         <h5 class="card-header">Patient Information</h5>
                         <div class="card-body">
                         
-						  <!-- Patient information -->
+						              <!-- Patient information -->
                           <p class="card-text">
                             <span class="fw-bold">ID : </span><span th:text="${patient.id}">MV50540</span><br>
                             <span class="fw-bold">Name : </span><span th:text="${patient.firstName} + ' ' + ${patient.lastName}">Max Verstappen</span><br>
@@ -34,11 +34,18 @@
                             <span class="fw-bold">Phone : </span><span th:text="${patient.phone}">000-000-0000</span><br>
                           </p>
                           
-                          <!-- Buttons -->
+                          <!-- Edit & Delete Buttons -->
                           <p class="float-end">
                             <a th:href="@{|../patient/update/${patient.id}|}" class="btn btn-primary">Edit</a>
-                            <a href="#" class="btn btn-danger">Delete</a>
+                            <a th:href="@{|../patient/delete/${patient.id}|}" class="btn btn-danger">Delete</a>
                           </p>
+                          
+                          <!-- Alert Box -->
+                          <br>
+                           	<div th:if="${message}" th:text="${message}" class="alert alert-info alert-dismissible fade show float-end" role="alert">
+                       	 		Simple Info Alert <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    		</div>
+                        
                         </div>
                       </div>
                 </div>

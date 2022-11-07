@@ -20,7 +20,6 @@
 
                     <div th:if="${message}" th:text="${message}" class="alert alert-info alert-dismissible fade show" role="alert">
                         Simple Info Alert <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
                     </div>
                         
                     <form method="post" th:action="@{/search}" th:object="${searchPatientDto}">
@@ -37,6 +36,7 @@
                         <br>
                         <input type="submit" class="btn btn-primary float-end" value="Search Patient">
                     </form>
+                    <a class="align-middle" href="/patient/add">Add a patient </a>
                 </div>
             </div>
 

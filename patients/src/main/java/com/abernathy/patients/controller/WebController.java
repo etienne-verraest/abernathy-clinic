@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
@@ -31,7 +32,7 @@ public class WebController {
 	 * @return										search.html
 	 */
 	@GetMapping("/")
-	public String showSearchPatientForm(SearchPatientDto searchPatientDto) {
+	public String showSearchPatientForm(SearchPatientDto searchPatientDto, RedirectAttributes redirectAttributes) {
 		return "index";
 	}
 
@@ -45,8 +46,8 @@ public class WebController {
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@PostMapping("/search")
-	public String validateSearchPatientForm(@Valid SearchPatientDto searchPatientDto, BindingResult result,
-			Model model) {
+	public String validateSearchPatientForm(@Valid SearchPatientDto searchPatientDto, BindingResult result, Model model,
+			RedirectAttributes redirectAttributes) {
 
 		// If there are validations errors on the search form, we display it again
 		if (result.hasErrors()) {
@@ -86,12 +87,13 @@ public class WebController {
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@GetMapping("/search/{id}")
-	public String showPatientView(@PathVariable("id") String id, Model model) {
+	public String showPatientView(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes) {
 
 		Patient patient;
 		try {
 			patient = patientDao.getPatientById(id);
 		} catch (PatientNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
 
@@ -139,12 +141,14 @@ public class WebController {
 	 * @throws PatientNotFoundException				Thrown if id was not found in database
 	 */
 	@GetMapping("/patient/update/{id}")
-	public String showUpdatePatientForm(@PathVariable("id") String id, Model model) {
+	public String showUpdatePatientForm(@PathVariable("id") String id, Model model,
+			RedirectAttributes redirectAttributes) {
 
 		Patient patient;
 		try {
 			patient = patientDao.getPatientById(id);
 		} catch (PatientNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
 
@@ -160,15 +164,41 @@ public class WebController {
 	 * @return										User profile if validation is correct, otherwise throws error
 	 */
 	@PostMapping("/patient/update")
-	public String validateUpdatePatientForm(@Valid PatientDto patientDto, BindingResult result, Model model) {
+	public String validateUpdatePatientForm(@Valid PatientDto patientDto, BindingResult result, Model model,
+			RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			return "patient/edit";
 		}
 
+		// Mapping and updating the patient
 		Patient patient = patientDao.mapToEntity(patientDto);
 		patient = patientDao.updatePatient(patient, patientDto.getId());
+
+		redirectAttributes.addFlashAttribute("message",
+				String.format("Patient with id '%s' was successfully updated", patientDto.getId()));
 		return "redirect:/search/" + patient.getId();
 
+	}
+
+	@GetMapping("/patient/delete/{id}")
+	public String deletePatient(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes)
+			throws PatientNotFoundException {
+
+		try {
+			patientDao.getPatientById(id);
+		} catch (PatientNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
+			return "redirect:/";
+		}
+
+		// If there is no exception caught we delete the patient
+		if (patientDao.deletePatient(id)) {
+			redirectAttributes.addFlashAttribute("message",
+					String.format("Patient with id '%s' was successfully deleted", id));
+			return "redirect:/";
+		}
+
+		return "redirect:/search/" + id;
 	}
 }
