@@ -25,8 +25,12 @@ import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("api/")
+@Api("API that allows CRUD operations on patients")
 public class ApiController {
 
 	@Autowired
@@ -42,6 +46,7 @@ public class ApiController {
 	 * @return											ResponseEntity of possible patients found
 	 * @throws PatientNotFoundException					Thrown if nobody was found
 	 */
+	@ApiOperation(value = "Find a patient either by first and last name or by ID")
 	@GetMapping("/patients")
 	public ResponseEntity<List<Patient>> getPatients(@RequestParam(required = false) String id,
 			@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName)
@@ -72,6 +77,7 @@ public class ApiController {
 	 * @return											Patient if fields are valid
 	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 */
+	@ApiOperation(value = "Create a patient")
 	@PostMapping("/patients")
 	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
 			throws IncorrectFieldValueException {
@@ -98,7 +104,7 @@ public class ApiController {
 	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 * @throws PatientNotFoundException					Thrown if the patient was not found
 	 */
-
+	@ApiOperation(value = "Update a patient for a givn ID")
 	@PutMapping("/patients/{id}")
 	public ResponseEntity<Patient> updatePatient(@PathVariable String id,
 			@Valid @RequestBody PatientDto updatePatientDto, Errors errors)
@@ -124,6 +130,7 @@ public class ApiController {
 	 * @return											A message if the operation was successfull
 	 * @throws PatientNotFoundException					Thrown if nobody was found given
 	 */
+	@ApiOperation(value = "Delete a patient for a given ID")
 	@DeleteMapping("/patients/{id}")
 	public ResponseEntity<String> deletePatient(@PathVariable(required = true) String id)
 			throws PatientNotFoundException {
