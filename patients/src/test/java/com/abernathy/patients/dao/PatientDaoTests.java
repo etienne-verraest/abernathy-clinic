@@ -155,4 +155,20 @@ class PatientDaoTests {
 
 	}
 
+	@Test
+	void testDeletePatient_ShouldReturnèTrue() throws PatientNotFoundException {
+
+		// ARRANGE
+		String patientId = patientMock.getId();
+		when(patientRepositoryMock.findById(patientId)).thenReturn(Optional.of(patientMock));
+
+		// ACT
+		boolean response = patientDaoMock.deletePatient(patientId);
+
+		// ASSERT
+		assertThat(response).isTrue();
+		verify(patientRepositoryMock, times(1)).deleteById(patientId);
+
+	}
+
 }
