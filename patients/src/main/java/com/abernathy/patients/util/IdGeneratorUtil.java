@@ -19,9 +19,11 @@ public class IdGeneratorUtil {
 		id.append(firstNameLetter);
 		id.append(lastNameLetter);
 
-		// Generate 5 Digts random number and append it to the string
+		// Generate a number between 0 and 99999 and append it to the string
+		// If the number is <= 9999, there will be trailing zeroes
 		int randomNumber = new Random().nextInt(99999);
-		id.append(randomNumber);
+		String numberWithTrailingZeros = String.format("%05d", randomNumber);
+		id.append(numberWithTrailingZeros);
 
 		// Returning the ID
 		return id.toString();
