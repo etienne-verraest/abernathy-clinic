@@ -126,7 +126,7 @@ class PatientDaoTests {
 		Patient response = patientDaoMock.savePatient(patientMock);
 
 		// ASSERT
-		assertThat(response.getFirstName()).isEqualTo("Alpha");
+		assertThat(response.getFirstName()).isEqualTo("ALPHA");
 		verify(patientRepositoryMock, times(1)).save(patientMock);
 
 	}
@@ -149,7 +149,7 @@ class PatientDaoTests {
 		Patient response = patientDaoMock.updatePatient(patientUpdateMock, "AB10000");
 
 		// ASSERT
-		assertThat(response.getFirstName()).isEqualTo("Alpha");
+		assertThat(response.getFirstName()).isEqualTo("ALPHA");
 		assertThat(response.getAddress()).isEqualTo("456 New Street");
 		verify(patientRepositoryMock, times(1)).save(patientUpdateMock);
 
