@@ -17,4 +17,10 @@ public class ControllerExceptionHandler {
 		return new ErrorMessage(new Date(), HttpStatus.NOT_FOUND, ex.getMessage());
 	}
 
+	@ExceptionHandler(NoteNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public ErrorMessage handleNoteNotFoundException(Exception ex, WebRequest request) {
+		return new ErrorMessage(new Date(), HttpStatus.NOT_FOUND, ex.getMessage());
+	}
+
 }

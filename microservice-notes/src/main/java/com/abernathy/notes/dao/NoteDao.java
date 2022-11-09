@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.abernathy.notes.exception.NoteNotFoundException;
 import com.abernathy.notes.exception.PatientNotFoundException;
 import com.abernathy.notes.model.Note;
 import com.abernathy.notes.model.dto.NoteDto;
@@ -28,9 +29,9 @@ public class NoteDao {
 	/**
 	 * Get notes for a given patient
 	 *
-	 * @param patientId							String : The ID of the patient
-	 * @return									List<Note> containing all practitioner's notes concerning the patient
-	 * @throws PatientNotFoundException			Thrown if no patient were found with given ID
+	 * @param patientId								String : The ID of the patient
+	 * @return										List<Note> containing all practitioner's notes concerning the patient
+	 * @throws PatientNotFoundException				Thrown if no patient were found with given ID
 	 */
 	public List<Note> getNotesByPatientId(String patientId) throws PatientNotFoundException {
 		if (patientExists(patientId)) {
@@ -42,17 +43,42 @@ public class NoteDao {
 	/**
 	 * Add a note to the given patient history
 	 *
-	 * @param note								A Note object practitioner's notes
-	 * @return									Returns a Note object if the operation is successful
-	 * @throws PatientNotFoundException         Thrown if no patient were found with given ID
+	 * @param note									A Note object containing practitioner's notes
+	 * @return										Returns a Note object if the operation is successful
+	 * @throws PatientNotFoundException         	Thrown if no patient were found with given ID
 	 */
 	public Note createNote(Note note) throws PatientNotFoundException {
-		if (patientExists(note.getId())) {
+		if (patientExists(note.getPatientId())) {
 			// Here we are forcing the generation of the ObjectID for the note
+			// Otherwise ModelMapper will set the id as the patient ID.
 			note.setId(new ObjectId().toString());
 			return noteRepository.insert(note);
 		}
 		throw new PatientNotFoundException("Patient with given ID was not found");
+	}
+
+	/**
+	 * Update a note in patient history. First the method check if
+	 * the note exists in database. Then it checks if the patient
+	 * exists.
+	 * If both criterias are met, the update will be made.
+	 *
+	 * @param noteId								String : The note ID (MongoDB Object ID)
+	 * @param note									Note : The note with new information to update
+	 * @return										Returns the updated note
+	 * @throws NoteNotFoundException				Thrown if the Note was not found
+	 * @throws PatientNotFoundException				Thrown if the Patient was not found
+	 */
+	public Note updateNote(String noteId, Note note) throws NoteNotFoundException, PatientNotFoundException {
+		if (noteRepository.findById(noteId).isPresent()) {
+			if (patientExists(note.getPatientId())) {
+				note.setId(noteId);
+				return noteRepository.save(note);
+			}
+
+			throw new PatientNotFoundException("Patient with given ID was not found");
+		}
+		throw new NoteNotFoundException("Note with given ObjectID was not found");
 	}
 
 	/**
