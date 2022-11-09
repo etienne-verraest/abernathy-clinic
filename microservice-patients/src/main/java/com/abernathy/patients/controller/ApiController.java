@@ -25,12 +25,12 @@ import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("api/")
-@Api("API that allows CRUD operations on patients")
+@Slf4j
 public class ApiController {
 
 	@Autowired
@@ -48,15 +48,8 @@ public class ApiController {
 	 */
 	@ApiOperation(value = "Find a patient either by first and last name or by ID")
 	@GetMapping("/patients")
-	public ResponseEntity<List<Patient>> getPatients(@RequestParam(required = false) String id,
-			@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName)
-			throws PatientNotFoundException {
-
-		// If ID is set, then we return the concerned patient
-		if (id != null) {
-			List<Patient> patient = List.of(patientDao.getPatientById(id));
-			return new ResponseEntity<>(patient, HttpStatus.OK);
-		}
+	public ResponseEntity<List<Patient>> getPatients(@RequestParam(required = false) String firstName,
+			@RequestParam(required = false) String lastName) throws PatientNotFoundException {
 
 		// If first name and last name is set then we fetch patients by their names
 		if (firstName != null && lastName != null) {
@@ -67,6 +60,23 @@ public class ApiController {
 		// Otherwise we return a list of every patients
 		List<Patient> patients = patientDao.getPatients();
 		return new ResponseEntity<>(patients, HttpStatus.OK);
+	}
+
+	/**
+	 * Return a single patient based on its ID
+	 *
+	 * @param id										String (required) : the ID of the patient
+	 * @return											ResponseEntity containg patient information if found
+	 * @throws PatientNotFoundException					Thrown if no patients were found
+	 */
+	@GetMapping("/patients/{id}")
+	public Patient getPatientById(@PathVariable(required = true) String id) throws PatientNotFoundException {
+
+		// Checking if ID is set
+		if (id != null) {
+			return patientDao.getPatientById(id);
+		}
+		return null;
 	}
 
 	/**

@@ -89,10 +89,8 @@ public class WebController {
 	@GetMapping("/search/{id}")
 	public String showPatientView(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes) {
 
-		Patient patient;
-		try {
-			patient = patientDao.getPatientById(id);
-		} catch (PatientNotFoundException e) {
+		Patient patient = patientDao.getPatientById(id);
+		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
@@ -144,10 +142,8 @@ public class WebController {
 	public String showUpdatePatientForm(@PathVariable("id") String id, Model model,
 			RedirectAttributes redirectAttributes) {
 
-		Patient patient;
-		try {
-			patient = patientDao.getPatientById(id);
-		} catch (PatientNotFoundException e) {
+		Patient patient = patientDao.getPatientById(id);
+		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
@@ -185,9 +181,8 @@ public class WebController {
 	public String deletePatient(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes)
 			throws PatientNotFoundException {
 
-		try {
-			patientDao.getPatientById(id);
-		} catch (PatientNotFoundException e) {
+		Patient patient = patientDao.getPatientById(id);
+		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
