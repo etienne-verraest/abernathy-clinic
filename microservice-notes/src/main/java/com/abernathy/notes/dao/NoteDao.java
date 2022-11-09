@@ -82,6 +82,22 @@ public class NoteDao {
 	}
 
 	/**
+	 * Delete a note given its ID
+	 *
+	 * @param noteId								String : The note ID (MongoDB Object ID)
+	 * @return										Returns true if the deletion was successful
+	 * @throws NoteNotFoundException				Thrown if the Note was not found
+	 */
+	public boolean deleteNote(String noteId) throws NoteNotFoundException {
+		if (noteRepository.findById(noteId).isPresent()) {
+			noteRepository.deleteById(noteId);
+			return true;
+		}
+
+		throw new NoteNotFoundException("Note with given ObjectID was not found");
+	}
+
+	/**
 	 * Map DTO to Entity
 	 *
 	 * @param noteDto							The NoteDto to map to entity
