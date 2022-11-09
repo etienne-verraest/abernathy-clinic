@@ -73,8 +73,8 @@ class ApiControllerTests {
 		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
 
 		// ACT AND ASSERT
-		mockMvc.perform(get("/api/patients").queryParam("id", "AB10000")).andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].firstName").value("Alpha"));
+		mockMvc.perform(get("/api/patients/{id}", "AB10000")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.firstName").value("Alpha"));
 	}
 
 	@Test
@@ -111,8 +111,7 @@ class ApiControllerTests {
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/api/patients").content(json).contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-				.andExpect(jsonPath("$.firstName").value("Alpha"));
+				.accept(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.firstName").value("Alpha"));
 	}
 
 	@Test
