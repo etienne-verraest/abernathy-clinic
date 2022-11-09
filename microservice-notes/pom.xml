@@ -12,7 +12,7 @@
 	<artifactId>notes</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>notes</name>
-	<description>Microservice to manage patients&apos; notes of Abernathy Clinic</description>
+	<description>Microservice to manage patients notes of Abernathy Clinic</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
