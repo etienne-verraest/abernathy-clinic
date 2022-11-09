@@ -154,4 +154,30 @@ class NoteDaoTests {
 
 	}
 
+	@Test
+	void testDeleteNote_ShouldReturn_BooleanTrue() throws NoteNotFoundException {
+
+		// ARRANGE
+		when(noteRepositoryMock.findById(anyString())).thenReturn(Optional.of(noteMock));
+
+		// ACT
+		boolean response = noteDaoMock.deleteNote("Note_1");
+
+		// ASSERT
+		assertThat(response).isTrue();
+	}
+
+	@Test
+	void testDeleteNote_ShouldThrow_NoteNotFoundException() {
+
+		// ARRANGE
+		when(noteRepositoryMock.findById(anyString())).thenReturn(Optional.empty());
+
+		// ACT
+		Executable executable = () -> noteDaoMock.deleteNote("Note_IENGIZESIENFSINSDIN");
+
+		// ASSERT
+		assertThrows(NoteNotFoundException.class, executable);
+	}
+
 }

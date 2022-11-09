@@ -3,6 +3,7 @@ package com.abernathy.notes.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +29,8 @@ public class ApiController {
 	 * Get a patient history, given its id
 	 *
 	 * @param id									String : The ID of the patient
-	 * @return										A List of notes concerning the patient
-	 * @throws PatientNotFoundException				Thrown if patient with given ID was not found
+	 * @return										A List<Note> concerning the patient
+	 * @throws PatientNotFoundException				Thrown if Patient with given ID was not found
 	 */
 	@GetMapping("notes/{patientId}")
 	public List<Note> getPatientHistory(@PathVariable String patientId) throws PatientNotFoundException {
@@ -40,8 +41,8 @@ public class ApiController {
 	 * Add a note to a given patient
 	 *
 	 * @param noteDto								NoteDto : Object that contains attributes for the note
-	 * @return										Returns the note if the operation is successful
-	 * @throws PatientNotFoundException             Thrown if patient with given ID was not found
+	 * @return										Returns the Note if the operation is successful
+	 * @throws PatientNotFoundException             Thrown if Patient with given ID was not found
 	 */
 	@PostMapping("notes")
 	public Note addNoteToPatientHistory(@RequestBody NoteDto noteDto) throws PatientNotFoundException {
@@ -55,13 +56,25 @@ public class ApiController {
 	 * @param noteId								String : the note ID (MongoDB Object ID)
 	 * @param noteDto								NoteDto containing information for update
 	 * @return										Returns the updated note
-	 * @throws NoteNotFoundException				Thrown if the note was not found
-	 * @throws PatientNotFoundException				Thrown if the patient was not found
+	 * @throws NoteNotFoundException				Thrown if the Note was not found
+	 * @throws PatientNotFoundException				Thrown if the Patient was not found
 	 */
 	@PutMapping("notes/{noteId}")
 	public Note updateNoteById(@PathVariable("noteId") String noteId, @RequestBody NoteDto noteDto)
 			throws NoteNotFoundException, PatientNotFoundException {
 		Note note = noteDao.mapToEntity(noteDto);
 		return noteDao.updateNote(noteId, note);
+	}
+
+	/**
+	 * Delete a note givn its ID
+	 *
+	 * @param noteId								String : the note ID (MongoDB Object ID)
+	 * @return										Returns true if the deletion was successful
+	 * @throws NoteNotFoundException				Thrown if the Note was not found
+	 */
+	@DeleteMapping("notes/{noteId}")
+	public boolean deleteNoteById(@PathVariable("noteId") String noteId) throws NoteNotFoundException {
+		return noteDao.deleteNote(noteId);
 	}
 }
