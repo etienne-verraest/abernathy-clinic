@@ -58,14 +58,13 @@ public class PatientDao {
 	 *
 	 * @param id								String : the id of the patient to fetch
 	 * @return									Patient : A patient object containing patient informatoion
-	 * @throws PatientNotFoundException			Thrown if nobody was found
 	 */
-	public Patient getPatientById(String id) throws PatientNotFoundException {
+	public Patient getPatientById(String id) {
 		Optional<Patient> patient = patientRepository.findById(id);
 		if (patient.isPresent()) {
 			return patient.get();
 		}
-		throw new PatientNotFoundException("The patient with given ID was not found.");
+		return null;
 	}
 
 	/**
