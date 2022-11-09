@@ -5,8 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +23,8 @@ import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
 @RequestMapping("api/")
-@Slf4j
 public class ApiController {
 
 	@Autowired
@@ -43,23 +37,22 @@ public class ApiController {
 	 *
 	 * @param firstName									String (optional) : the first name of the patient
 	 * @param lastName									String (optional) : the last name of the patient
-	 * @return											ResponseEntity of possible patients found
+	 * @return											List<Patient> containing possible patients
 	 * @throws PatientNotFoundException					Thrown if nobody was found
 	 */
-	@ApiOperation(value = "Find a patient either by first and last name or by ID")
 	@GetMapping("/patients")
-	public ResponseEntity<List<Patient>> getPatients(@RequestParam(required = false) String firstName,
+	public List<Patient> getPatients(@RequestParam(required = false) String firstName,
 			@RequestParam(required = false) String lastName) throws PatientNotFoundException {
 
 		// If first name and last name is set then we fetch patients by their names
 		if (firstName != null && lastName != null) {
 			List<Patient> possiblePatients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
-			return new ResponseEntity<>(possiblePatients, HttpStatus.OK);
+			return possiblePatients;
 		}
 
 		// Otherwise we return a list of every patients
 		List<Patient> patients = patientDao.getPatients();
-		return new ResponseEntity<>(patients, HttpStatus.OK);
+		return patients;
 	}
 
 	/**
@@ -87,9 +80,8 @@ public class ApiController {
 	 * @return											Patient if fields are valid
 	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 */
-	@ApiOperation(value = "Create a patient")
 	@PostMapping("/patients")
-	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
+	public Patient registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
 			throws IncorrectFieldValueException {
 
 		// Check if validation contains errors, if it's the case an error message is
@@ -101,7 +93,7 @@ public class ApiController {
 		// If there is no error, then we create the patient in database
 		Patient patient = patientDao.mapToEntity(addPatientDto);
 		patient = patientDao.savePatient(patient);
-		return new ResponseEntity<>(patient, HttpStatus.CREATED);
+		return patient;
 	}
 
 	/**
@@ -114,11 +106,9 @@ public class ApiController {
 	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 * @throws PatientNotFoundException					Thrown if the patient was not found
 	 */
-	@ApiOperation(value = "Update a patient for a givn ID")
 	@PutMapping("/patients/{id}")
-	public ResponseEntity<Patient> updatePatient(@PathVariable String id,
-			@Valid @RequestBody PatientDto updatePatientDto, Errors errors)
-			throws IncorrectFieldValueException, PatientNotFoundException {
+	public Patient updatePatient(@PathVariable String id, @Valid @RequestBody PatientDto updatePatientDto,
+			Errors errors) throws IncorrectFieldValueException, PatientNotFoundException {
 
 		// If Dto has errors, then we return an error
 		if (errors.hasErrors()) {
@@ -130,7 +120,7 @@ public class ApiController {
 		// re-generated on update
 		Patient patient = patientDao.mapToEntity(updatePatientDto);
 		patient = patientDao.updatePatient(patient, patientDao.getPatientById(id).getId());
-		return new ResponseEntity<>(patient, HttpStatus.OK);
+		return patient;
 	}
 
 	/**
@@ -140,18 +130,15 @@ public class ApiController {
 	 * @return											A message if the operation was successfull
 	 * @throws PatientNotFoundException					Thrown if nobody was found given
 	 */
-	@ApiOperation(value = "Delete a patient for a given ID")
 	@DeleteMapping("/patients/{id}")
-	public ResponseEntity<String> deletePatient(@PathVariable(required = true) String id)
-			throws PatientNotFoundException {
+	public String deletePatient(@PathVariable(required = true) String id) throws PatientNotFoundException {
 
 		// Checking if patient with given id exists
 		if (id != null && patientDao.getPatientById(id) != null) {
 			if (patientDao.deletePatient(id)) {
-				return new ResponseEntity<>("Patient with id : " + id + " was successfully deleted", HttpStatus.OK);
+				return "Patient with id : " + id + " was successfully deleted";
 			}
 		}
-
 		throw new PatientNotFoundException("Patient with given ID was not found.");
 	}
 
