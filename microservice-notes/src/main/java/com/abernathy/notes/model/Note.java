@@ -1,5 +1,7 @@
 package com.abernathy.notes.model;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,12 +15,17 @@ import lombok.ToString;
 @Document(collection = "notes")
 public class Note {
 
+	// TODO : Check if all attributes are present based on tests cases
+	// TODO : Validate fields in DTO
+
 	@Id
 	private String id;
 
-	private String patientId;
+	private Date date;
 
 	private String practitioner;
+
+	private String patientId;
 
 	private String content;
 
