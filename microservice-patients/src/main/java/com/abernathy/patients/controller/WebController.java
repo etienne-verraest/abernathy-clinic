@@ -22,6 +22,10 @@ import com.abernathy.patients.model.dto.webforms.SearchPatientDto;
 @Controller
 public class WebController {
 
+	// TODO : Set up Feign client
+	// TODO : Set up Notes Proxy
+	// TODO : Set up Notes Web Controller with UI
+
 	@Autowired
 	PatientDao patientDao;
 

@@ -1,5 +1,6 @@
 package com.abernathy.notes.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -52,6 +53,7 @@ public class NoteDao {
 			// Here we are forcing the generation of the ObjectID for the note
 			// Otherwise ModelMapper will set the id as the patient ID.
 			note.setId(new ObjectId().toString());
+			note.setDate(new Date());
 			return noteRepository.insert(note);
 		}
 		throw new PatientNotFoundException("Patient with given ID was not found");
@@ -73,6 +75,7 @@ public class NoteDao {
 		if (noteRepository.findById(noteId).isPresent()) {
 			if (patientExists(note.getPatientId())) {
 				note.setId(noteId);
+				note.setDate(new Date());
 				return noteRepository.save(note);
 			}
 
