@@ -10,6 +10,6 @@ public class NoteDto {
 	@NotBlank(message = "You must specify a patient ID")
 	private String patientId;
 
-	@NotBlank(message = "Notes/recommandations must have at least 1 character")
+	@NotBlank(message = "Notes/recommandations must not be blank")
 	private String content;
 }
