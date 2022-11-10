@@ -10,6 +10,6 @@ import com.abernathy.notes.model.Note;
 @Repository
 public interface NoteRepository extends MongoRepository<Note, String> {
 
-	List<Note> findByPatientId(String patientId);
+	List<Note> findByPatientIdOrderByDateDesc(String patientId);
 
 }

@@ -59,13 +59,11 @@ class ApiControllerTests {
 			noteMock = new Note();
 			noteMock.setId("Note_" + i);
 			noteMock.setPatientId("AB10000");
-			noteMock.setPractitioner("Dr. Melrose");
 			noteMock.setContent(contents[i]);
 			notesListMock.add(noteMock);
 		}
 
 		noteDtoMock = new NoteDto();
-		noteDtoMock.setPractitioner("Dr. Melrose");
 		noteDtoMock.setPatientId("AB10000");
 		noteDtoMock.setContent("He feels sick");
 

@@ -36,7 +36,7 @@ public class NoteDao {
 	 */
 	public List<Note> getNotesByPatientId(String patientId) throws PatientNotFoundException {
 		if (patientExists(patientId)) {
-			return noteRepository.findByPatientId(patientId);
+			return noteRepository.findByPatientIdOrderByDateDesc(patientId);
 		}
 		throw new PatientNotFoundException("Patient with given ID was not found");
 	}
@@ -103,8 +103,8 @@ public class NoteDao {
 	/**
 	 * Map DTO to Entity
 	 *
-	 * @param noteDto							The NoteDto to map to entity
-	 * @return									Note entity which can be saved in MongoDB database
+	 * @param noteDto								The NoteDto to map to entity
+	 * @return										Note entity which can be saved in MongoDB database
 	 */
 	public Note mapToEntity(NoteDto noteDto) {
 		return modelMapper.map(noteDto, Note.class);
@@ -114,8 +114,8 @@ public class NoteDao {
 	 * Helper method that is used to check if a patient exists
 	 * The patients are handled by the "Patients" microservice.
 	 *
-	 * @param patientId							String : The ID of the patient to check
-	 * @return									Returns true if patient with ID exists
+	 * @param patientId								String : The ID of the patient to check
+	 * @return										Returns true if patient with ID exists
 	 */
 	private boolean patientExists(String patientId) {
 		return patientsProxy.getPatientById(patientId) != null;

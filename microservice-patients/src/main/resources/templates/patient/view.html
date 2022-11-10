@@ -39,13 +39,6 @@
                             <a th:href="@{|../patient/update/${patient.id}|}" class="btn btn-primary">Edit</a>
                             <a th:href="@{|../patient/delete/${patient.id}|}" class="btn btn-danger">Delete</a>
                           </p>
-                          
-                          <!-- Alert Box -->
-                          <br>
-                           	<div th:if="${message}" th:text="${message}" class="alert alert-info alert-dismissible fade show float-end" role="alert">
-                       	 		Simple Info Alert <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    		</div>
-                        
                         </div>
                       </div>
                 </div>
@@ -54,8 +47,16 @@
                     <div class="card">
                         <h5 class="card-header">Notes</h5>
                         <div class="card-body">
-                          <p class="card-text">
-                            To be implemented with micro service 2
+                          <p class="card-text">  
+                            
+                            <!-- For each notes-->
+                            <div class="card mb-2" th:if="${hasNotes}" th:each="note : ${notes}">
+                              <div class="card-body">
+                                <h5 th:text="${note.date}">25 nov. 2015</h5>
+                                <span th:text="${note.content}">Practitioner's notes or recommandations</span>
+                              </div>
+                            </div>
+                          
                           </p>
                         </div>
                       </div>

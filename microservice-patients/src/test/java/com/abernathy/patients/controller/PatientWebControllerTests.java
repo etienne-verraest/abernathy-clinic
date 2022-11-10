@@ -23,8 +23,8 @@ import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 
-@WebMvcTest(controllers = WebController.class)
-class WebControllerTests {
+@WebMvcTest(controllers = PatientWebController.class)
+class PatientWebControllerTests {
 
 	@Autowired
 	private MockMvc mockMvc;

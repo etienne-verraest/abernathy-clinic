@@ -62,7 +62,6 @@ class NoteDaoTests {
 		noteMock = new Note();
 		noteMock.setId("Note_1");
 		noteMock.setPatientId("AB10000");
-		noteMock.setPractitioner("Dr. Melrose");
 		noteMock.setContent("He feels sick");
 	}
 
@@ -71,7 +70,7 @@ class NoteDaoTests {
 
 		// ARRANGE
 		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
-		when(noteRepositoryMock.findByPatientId("AB10000")).thenReturn(List.of(noteMock));
+		when(noteRepositoryMock.findByPatientIdOrderByDateDesc("AB10000")).thenReturn(List.of(noteMock));
 
 		// ACT
 		List<Note> response = noteDaoMock.getNotesByPatientId("AB10000");
@@ -92,7 +91,7 @@ class NoteDaoTests {
 
 		// ASSERT
 		assertThrows(PatientNotFoundException.class, executable);
-		verify(noteRepositoryMock, never()).findByPatientId("XY30300");
+		verify(noteRepositoryMock, never()).findByPatientIdOrderByDateDesc("XY30300");
 	}
 
 	@Test
@@ -106,7 +105,7 @@ class NoteDaoTests {
 		Note response = noteDaoMock.createNote(noteMock);
 
 		// ASSERT
-		assertThat(response.getPractitioner()).isEqualTo("Dr. Melrose");
+		assertThat(response.getContent()).isEqualTo("He feels sick");
 	}
 
 	@Test
@@ -121,7 +120,7 @@ class NoteDaoTests {
 		Note response = noteDaoMock.updateNote("Note_1", noteMock);
 
 		// ASSERT
-		assertThat(response.getPractitioner()).isEqualTo("Dr. Melrose");
+		assertThat(response.getContent()).isEqualTo("He feels sick");
 		verify(noteRepositoryMock, times(1)).save(any(Note.class));
 	}
 

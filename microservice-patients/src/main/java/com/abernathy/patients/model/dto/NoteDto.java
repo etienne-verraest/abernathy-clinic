@@ -1,4 +1,4 @@
-package com.abernathy.notes.model.dto;
+package com.abernathy.patients.model.dto;
 
 import javax.validation.constraints.NotBlank;
 
