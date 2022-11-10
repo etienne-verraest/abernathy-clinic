@@ -86,8 +86,8 @@ public class NoteWebController {
 
 		NoteBean note = notesProxy.getNote(noteId);
 		if (note == null) {
-			redirectAttributes.addFlashAttribute("message", "Note was not found");
-			return "redirect:/search/";
+			redirectAttributes.addFlashAttribute("message", "Note was not found.");
+			return "redirect:/search/" + patientId;
 		}
 
 		NoteDto noteDto = modelMapper.map(note, NoteDto.class);
@@ -111,9 +111,41 @@ public class NoteWebController {
 			return "note/edit";
 		}
 
-		redirectAttributes.addFlashAttribute("message", "Note with id '" + noteId + "' was successfully updated");
+		redirectAttributes.addFlashAttribute("message", "Note was successfully updated.");
 		notesProxy.updateNoteById(noteId, noteDto);
 		return "redirect:/search/" + noteDto.getPatientId();
 	}
 
+	@GetMapping("/{patientId}/notes/{noteId}/delete")
+	public String deleteNoteFromPatientHistory(@PathVariable String patientId, @PathVariable String noteId,
+			RedirectAttributes redirectAttributes) {
+
+		// Check if patient exists
+		Patient patient = patientDao.getPatientById(patientId);
+		if (patient == null) {
+			redirectAttributes.addFlashAttribute("message",
+					String.format("Patient with id '%s' was not found", patientId));
+			return "redirect:/";
+		}
+
+		// Check if note exists
+		NoteBean note = notesProxy.getNote(noteId);
+		if (note == null) {
+			redirectAttributes.addFlashAttribute("message", "Note was not found");
+			return "redirect:/search/" + patientId;
+		}
+
+		// Check if patient Id are the same (in path and in note)
+		if (!note.getPatientId().equals(patientId)) {
+			redirectAttributes.addFlashAttribute("message",
+					"You are trying to update a note that doesn't belong to the correct patient");
+			return "redirect:/search/" + patientId;
+		}
+
+		// Delete the note if every checks have passed
+		notesProxy.deleteNoteById(noteId);
+		redirectAttributes.addFlashAttribute("message", "Note was successfully deleted.");
+		return "redirect:/search/" + patientId;
+
+	}
 }
