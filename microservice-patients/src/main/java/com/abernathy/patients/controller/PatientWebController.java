@@ -92,7 +92,7 @@ public class PatientWebController {
 	 * @throws PatientNotFoundException				Thrown if nobody was found
 	 */
 	@GetMapping("/search/{id}")
-	public String showPatientView(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes) {
+	public String showPatientView(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
 
 		Patient patient = patientDao.getPatientById(id);
 		if (patient == null) {

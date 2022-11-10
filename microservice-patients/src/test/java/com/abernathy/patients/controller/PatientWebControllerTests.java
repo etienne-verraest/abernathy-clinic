@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -18,10 +19,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.abernathy.patients.bean.NoteBean;
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
+import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 
 @WebMvcTest(controllers = PatientWebController.class)
 class PatientWebControllerTests {
@@ -32,9 +35,13 @@ class PatientWebControllerTests {
 	@MockBean
 	private PatientDao patientDaoMock;
 
+	@MockBean
+	private MicroserviceNotesProxy notesProxyMock;
+
 	private static List<Patient> patientsListMock = new ArrayList<Patient>();
 	private static Patient patientMock;
 	private static PatientDto patientDtoMock;
+	private static NoteBean noteMock;
 
 	@BeforeAll
 	static void initialization() throws Exception {
@@ -60,6 +67,9 @@ class PatientWebControllerTests {
 
 		// Adding the mock patient to the mocked list
 		patientsListMock.add(patientMock);
+
+		// Creating note for the patient
+		noteMock = new NoteBean("Note_1", new Date(), "AB10000", "He feels sick");
 	}
 
 	@Test
@@ -127,10 +137,12 @@ class PatientWebControllerTests {
 
 		// ARRANGE
 		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxyMock.getPatientHistory("AB10000")).thenReturn(List.of(noteMock));
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/search/{id}", "AB10000")) //
-				.andExpect(status().isOk()).andExpect(model().attributeExists("patient"));
+				.andExpect(status().isOk()).andExpect(model().attributeExists("patient"))
+				.andExpect(model().attributeExists("notes"));
 
 	}
 
