@@ -116,6 +116,13 @@ public class NoteWebController {
 		return "redirect:/search/" + noteDto.getPatientId();
 	}
 
+	/**
+	 * Delete a specific note from patient history
+	 *
+	 * @param patientId									String : The patient whom we will update the note
+	 * @param noteId									String : The ID of the note
+	 * @return											Returns the Patient view if the deletion was succesful
+	 */
 	@GetMapping("/{patientId}/notes/{noteId}/delete")
 	public String deleteNoteFromPatientHistory(@PathVariable String patientId, @PathVariable String noteId,
 			RedirectAttributes redirectAttributes) {

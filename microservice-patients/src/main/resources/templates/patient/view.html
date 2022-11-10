@@ -50,23 +50,23 @@
                         <div class="card-body">
                           <p class="card-text">  
                             
-                            <!-- If patient doesn't have notes -->
-                            <span th:if="${!hasNotes}">This patient doesn't have notes at the moment.</span>
-  
                             <div th:if="${message}" class="alert alert-info" role="alert" th:text="${message}">
                               Note was successfully updated
                             </div>
-                            
+
+                            <!-- If patient doesn't have notes -->
+                            <span th:if="${!hasNotes}">This patient doesn't have notes at the moment.</span>
+  
                             <!-- If patient has notes -->
                             <div class="card mb-2" th:if="${hasNotes}" th:each="note : ${notes}">
                               <div class="card-body">
-                                <h5 th:text="${note.date}">25 nov. 2015</h5></span>
+                                <h5 th:text="${note.date}">25 nov. 2015</h5>
                                 <span th:text="${note.content}">Practitioner's notes or recommandations</span>
                                 <br>
                                 <div class="row float-end">
                                   <div class="col">
-                                  <a class="me-2" th:href="@{|/${patient.id}/notes/${note.id}/edit|}"><i class="bi bi-pencil"></i></a>
-                                  <a th:href="@{|/${patient.id}/notes/${note.id}/delete|}" class="text-danger"><i class="bi bi-trash"></i></a>
+                                    <a class="me-2" th:href="@{|/${patient.id}/notes/${note.id}/edit|}"><i class="bi bi-pencil"></i></a>
+                                    <a th:href="@{|/${patient.id}/notes/${note.id}/delete|}" class="text-danger"><i class="bi bi-trash"></i></a>
                                   </div>
                                 </div>
                               </div>
