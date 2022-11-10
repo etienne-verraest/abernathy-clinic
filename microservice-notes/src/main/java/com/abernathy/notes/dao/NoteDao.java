@@ -117,6 +117,24 @@ public class NoteDao {
 	}
 
 	/**
+	 * Delete every notes for a given Patient
+	 *
+	 * @param patientId								String : The Patient ID
+	 * @return										True if notes were found and deleted
+	 * @throws PatientNotFoundException				Thrown if the Patient was not found
+	 */
+	public boolean deleteAllNotesForPatient(String patientId) throws PatientNotFoundException {
+		if (patientExists(patientId)) {
+			if (!noteRepository.findByPatientIdOrderByDateDesc(patientId).isEmpty()) {
+				noteRepository.deleteAllByPatientId(patientId);
+				return true;
+			}
+			return false;
+		}
+		throw new PatientNotFoundException("Patient with given ID was not found");
+	}
+
+	/**
 	 * Map DTO to Entity
 	 *
 	 * @param noteDto								The NoteDto to map to entity

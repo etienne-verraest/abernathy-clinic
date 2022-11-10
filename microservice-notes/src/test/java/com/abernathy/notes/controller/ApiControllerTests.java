@@ -1,5 +1,6 @@
 package com.abernathy.notes.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.abernathy.notes.bean.PatientBean;
 import com.abernathy.notes.dao.NoteDao;
@@ -120,7 +122,24 @@ class ApiControllerTests {
 		when(noteDaoMock.deleteNote(anyString())).thenReturn(true);
 
 		// ACT AND ASSERT
-		mockMvc.perform(delete("/api/notes/{noteId}", "Note_1")).andExpect(status().isOk());
+		MvcResult result = mockMvc.perform(delete("/api/notes/{noteId}", "Note_1")).andExpect(status().isOk())
+				.andReturn();
+		String content = result.getResponse().getContentAsString();
+		assertThat(content).isEqualTo("true");
+	}
+
+	@Test
+	void testDeleteAllNotesForPatient_ShouldBe_StatusOk() throws Exception {
+
+		// ARRANGE
+		when(noteDaoMock.deleteAllNotesForPatient(anyString())).thenReturn(true);
+
+		// ACT AND ASSERT
+		MvcResult result = mockMvc.perform(delete("/api/notes/all/{patientId}", "AB10000")).andExpect(status().isOk())
+				.andReturn();
+
+		String content = result.getResponse().getContentAsString();
+		assertThat(content).isEqualTo("true");
 	}
 
 }

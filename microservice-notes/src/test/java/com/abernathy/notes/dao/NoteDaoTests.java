@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +96,32 @@ class NoteDaoTests {
 	}
 
 	@Test
+	void testGetNoteById_ShouldReturn_Note() {
+
+		// ARRANGE
+		when(noteRepositoryMock.findById("Note_1")).thenReturn(Optional.of(noteMock));
+
+		// ACT
+		Note response = noteDaoMock.getNoteById("Note_1");
+
+		// ASSERT
+		assertThat(response.getId()).isEqualTo("Note_1");
+	}
+
+	@Test
+	void testGetNoteById_ShouldReturn_Null() {
+
+		// ARRANGE
+		when(noteRepositoryMock.findById(anyString())).thenReturn(Optional.empty());
+
+		// ACT
+		Note response = noteDaoMock.getNoteById("Note_FVIJDSODNDSX");
+
+		// ASSERT
+		assertThat(response).isNull();
+	}
+
+	@Test
 	void testCreateNote_ShouldBe_SuccessfulOperation() throws PatientNotFoundException {
 
 		// ARRANGE
@@ -177,6 +204,34 @@ class NoteDaoTests {
 
 		// ASSERT
 		assertThrows(NoteNotFoundException.class, executable);
+	}
+
+	@Test
+	void testDeleteAllNotesForPatient_ShouldReturn_BooleanTrue() throws PatientNotFoundException {
+
+		// ARRANGE
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(noteRepositoryMock.findByPatientIdOrderByDateDesc("AB10000")).thenReturn(List.of(noteMock));
+
+		// ACT
+		boolean response = noteDaoMock.deleteAllNotesForPatient("AB10000");
+
+		// ASSERT
+		assertThat(response).isTrue();
+	}
+
+	@Test
+	void testDeleteAllNotesForPatientWhoHasNotNotes_ShouldReturn_BooleanFalse() throws PatientNotFoundException {
+
+		// ARRANGE
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(noteRepositoryMock.findByPatientIdOrderByDateDesc("AB10000")).thenReturn(Collections.emptyList());
+
+		// ACT
+		boolean response = noteDaoMock.deleteAllNotesForPatient("AB10000");
+
+		// ASSERT
+		assertThat(response).isFalse();
 	}
 
 }

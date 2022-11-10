@@ -136,6 +136,7 @@ public class ApiController {
 		// Checking if patient with given id exists
 		if (id != null && patientDao.getPatientById(id) != null) {
 			if (patientDao.deletePatient(id)) {
+				// TODO : Implement note deletion
 				return true;
 			}
 		}

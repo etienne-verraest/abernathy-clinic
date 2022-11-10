@@ -12,4 +12,6 @@ public interface NoteRepository extends MongoRepository<Note, String> {
 
 	List<Note> findByPatientIdOrderByDateDesc(String patientId);
 
+	void deleteAllByPatientId(String patientId);
+
 }

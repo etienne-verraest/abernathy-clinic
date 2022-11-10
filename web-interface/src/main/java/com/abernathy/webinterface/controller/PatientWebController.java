@@ -184,19 +184,38 @@ public class PatientWebController {
 
 	}
 
-	@GetMapping("/patient/delete/{id}")
-	public String deletePatient(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
+	/**
+	 * Delete a patient given its ID
+	 *
+	 * @param patientId								String : The Patient ID
+	 * @return										Redirect to the homepage and show appropriate message depending on case
+	 */
+	@GetMapping("/patient/delete/{patientId}")
+	public String deletePatient(@PathVariable String patientId, Model model, RedirectAttributes redirectAttributes) {
 
-		PatientBean patient = patientsProxy.getPatientById(id);
+		// Checking if patient exists
+		PatientBean patient = patientsProxy.getPatientById(patientId);
 		if (patient == null) {
-			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
+			redirectAttributes.addFlashAttribute("message",
+					String.format("Patient with id '%s' was not found", patientId));
 			return "redirect:/";
 		}
 
-		// If there is no exception caught we delete the patient
-		if (patientsProxy.deletePatient(id)) {
+		// If patient had notes, we display a message to tell that the deletion was
+		// successful
+		boolean notesDeleted = notesProxy.deleteAllNotesForPatientId(patientId);
+		if (patientsProxy.deletePatient(patientId) && notesDeleted) {
 			redirectAttributes.addFlashAttribute("message",
-					String.format("Patient with id '%s' was successfully deleted", id));
+					String.format(
+							"Patient with id '%s' was successfully deleted. Notes attached to him were also deleted.",
+							patientId));
+			return "redirect:/";
+		}
+
+		// If there are no notes, we don't mention notes.
+		if (patientsProxy.deletePatient(patientId) && !notesDeleted) {
+			redirectAttributes.addFlashAttribute("message",
+					String.format("Patient with id '%s' was successfully deleted", patientId));
 			return "redirect:/";
 		}
 
