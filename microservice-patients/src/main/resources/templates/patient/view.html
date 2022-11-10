@@ -23,7 +23,7 @@
                         <h5 class="card-header">Patient Information</h5>
                         <div class="card-body">
                         
-						              <!-- Patient information -->
+						  <!-- Patient information -->
                           <p class="card-text">
                             <span class="fw-bold">ID : </span><span th:text="${patient.id}">MV50540</span><br>
                             <span class="fw-bold">Name : </span><span th:text="${patient.firstName} + ' ' + ${patient.lastName}">Max Verstappen</span><br>
@@ -66,7 +66,7 @@
                                 <div class="row float-end">
                                   <div class="col">
                                   <a class="me-2" th:href="@{|/${patient.id}/notes/${note.id}/edit|}"><i class="bi bi-pencil"></i></a>
-                                  <a class=""><i class="bi bi-trash"></i></a>
+                                  <a th:href="@{|/${patient.id}/notes/${note.id}/delete|}" class="text-danger"><i class="bi bi-trash"></i></a>
                                   </div>
                                 </div>
                               </div>
