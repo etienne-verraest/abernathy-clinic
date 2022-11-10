@@ -1,5 +1,7 @@
 package com.abernathy.patients.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -175,7 +177,7 @@ class PatientWebControllerTests {
 	}
 
 	@Test
-	void testUpdatePatient_Successful() throws Exception {
+	void testShowUpdatePatient_Successful() throws Exception {
 
 		// ARRANGE
 		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
@@ -184,6 +186,45 @@ class PatientWebControllerTests {
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/update/{id}", "AB10000")) //
 				.andExpect(status().isOk()).andExpect(model().attributeExists("patientDto"));
+	}
+
+	@Test
+	void testSubmitUpdatePatient_Successful() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.mapToEntity(any(PatientDto.class))).thenReturn(patientMock);
+		when(patientDaoMock.updatePatient(any(Patient.class), anyString())).thenReturn(patientMock);
+
+		// ACT AND ASSERT
+		mockMvc.perform(post("/patient/update") //
+				.param("id", "AB10000") //
+				.param("firstName", "Alpha") //
+				.param("lastName", "Bravo") //
+				.param("dateOfBirth", "1998-02-16") //
+				.param("gender", "M") //
+				.param("address", "526 Race Track") //
+				.param("phone", "123-400-5000") //
+		).andExpect(status().is3xxRedirection())
+				.andExpect(flash().attribute("message", "Patient with id 'AB10000' was successfully updated"));
+	}
+
+	@Test
+	void testSubmitUpdatePatient_ContentIsInvalid() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.mapToEntity(any(PatientDto.class))).thenReturn(patientMock);
+		when(patientDaoMock.updatePatient(any(Patient.class), anyString())).thenReturn(patientMock);
+
+		// ACT AND ASSERT
+		mockMvc.perform(post("/patient/update") //
+				.param("id", "AB10000") //
+				.param("firstName", "Alpha") //
+				.param("lastName", "Bravo") //
+				.param("dateOfBirth", "1998-02-16") //
+				.param("gender", "M") //
+				.param("address", "526 Race Track") //
+				.param("phone", "123444-40550-555000") //
+		).andExpect(model().hasErrors());
 	}
 
 	@Test
@@ -196,5 +237,17 @@ class PatientWebControllerTests {
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
 				.andExpect(status().is3xxRedirection()).andExpect(flash().attributeExists("message"));
+	}
+
+	@Test
+	void testDeletePatient_Invalid() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientDaoMock.deletePatient("AB10000")).thenReturn(false);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
+				.andExpect(flash().attribute("message", "An error happened while trying to delete patient"));
 	}
 }

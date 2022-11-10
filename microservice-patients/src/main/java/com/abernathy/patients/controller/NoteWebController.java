@@ -84,6 +84,15 @@ public class NoteWebController {
 	public String showUpdateForm(@PathVariable String patientId, @PathVariable String noteId, Model model,
 			RedirectAttributes redirectAttributes) {
 
+		// Check if patient exists
+		Patient patient = patientDao.getPatientById(patientId);
+		if (patient == null) {
+			redirectAttributes.addFlashAttribute("message",
+					String.format("Patient with id '%s' was not found", patientId));
+			return "redirect:/";
+		}
+
+		// Check if note exists
 		NoteBean note = notesProxy.getNote(noteId);
 		if (note == null) {
 			redirectAttributes.addFlashAttribute("message", "Note was not found.");
@@ -145,7 +154,7 @@ public class NoteWebController {
 		// Check if patient Id are the same (in path and in note)
 		if (!note.getPatientId().equals(patientId)) {
 			redirectAttributes.addFlashAttribute("message",
-					"You are trying to update a note that doesn't belong to the correct patient");
+					"You are trying to delete a note that doesn't belong to the correct patient");
 			return "redirect:/search/" + patientId;
 		}
 
