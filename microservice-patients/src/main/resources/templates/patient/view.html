@@ -45,17 +45,21 @@
 
                 <div class="col-8">
                     <div class="card">
-                        <h5 class="card-header">Notes</h5>
+                        <h5 class="card-header">Notes <span th:if="${notesNumber > 0}" th:text="'(' + ${notesNumber} +')'">(1)</span></h5>
                         <div class="card-body">
                           <p class="card-text">  
                             
-                            <!-- For each notes-->
+                            <!-- If patient doesn't have notes -->
+                            <span th:if="${!hasNotes}">This patient doesn't have notes at the moment.</span>
+  
+                            <!-- If patient has notes -->
                             <div class="card mb-2" th:if="${hasNotes}" th:each="note : ${notes}">
                               <div class="card-body">
                                 <h5 th:text="${note.date}">25 nov. 2015</h5>
                                 <span th:text="${note.content}">Practitioner's notes or recommandations</span>
                               </div>
                             </div>
+
                           
                           </p>
                         </div>

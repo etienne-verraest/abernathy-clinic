@@ -100,10 +100,15 @@ public class PatientWebController {
 			return "redirect:/";
 		}
 
+		// Adding patient's microservice information
+		model.addAttribute("patient", patient);
+
+		// Adding patient's notes history from Notes microservice
 		List<NoteBean> notes = notesProxy.getPatientHistory(id);
 		model.addAttribute("hasNotes", !notes.isEmpty());
+		model.addAttribute("notesNumber", notes.size());
 		model.addAttribute("notes", notes);
-		model.addAttribute("patient", patient);
+
 		return "patient/view";
 	}
 
