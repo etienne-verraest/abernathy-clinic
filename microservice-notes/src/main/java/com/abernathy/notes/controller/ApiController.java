@@ -79,14 +79,26 @@ public class ApiController {
 	}
 
 	/**
-	 * Delete a note givn its ID
+	 * Delete a note given its ID
 	 *
 	 * @param noteId								String : the note ID (MongoDB Object ID)
 	 * @return										Returns true if the deletion was successful
 	 * @throws NoteNotFoundException				Thrown if the Note was not found
 	 */
 	@DeleteMapping("notes/{noteId}")
-	public boolean deleteNoteById(@PathVariable("noteId") String noteId) throws NoteNotFoundException {
+	public boolean deleteNoteById(@PathVariable String noteId) throws NoteNotFoundException {
 		return noteDao.deleteNote(noteId);
+	}
+
+	/**
+	 * Delete all notes for a patient
+	 *
+	 * @param patientId								String : The Patient ID
+	 * @return										Returns true if the deletion was successful
+	 * @throws PatientNotFoundException				Thrown if the Patient was not found
+	 */
+	@DeleteMapping("notes/all/{patientId}")
+	public boolean deleteAllNotesForPatientId(@PathVariable String patientId) throws PatientNotFoundException {
+		return noteDao.deleteAllNotesForPatient(patientId);
 	}
 }

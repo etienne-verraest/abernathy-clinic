@@ -26,8 +26,11 @@ public interface MicroserviceNotesProxy {
 	NoteBean addNoteToPatientHistory(@RequestBody NoteDto noteDto);
 
 	@PutMapping("api/notes/{noteId}")
-	NoteBean updateNoteById(@PathVariable("noteId") String noteId, @RequestBody NoteDto noteDto);
+	NoteBean updateNoteById(@PathVariable String noteId, @RequestBody NoteDto noteDto);
 
 	@DeleteMapping("api/notes/{noteId}")
-	boolean deleteNoteById(@PathVariable("noteId") String noteId);
+	boolean deleteNoteById(@PathVariable String noteId);
+
+	@DeleteMapping("api/notes/all/{patientId}")
+	boolean deleteAllNotesForPatientId(@PathVariable String patientId);
 }
