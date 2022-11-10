@@ -207,6 +207,8 @@ public class PatientWebController {
 			return "redirect:/";
 		}
 
-		return "redirect:/search/" + id;
+		// If deletion is not successful
+		redirectAttributes.addFlashAttribute("message", "An error happened while trying to delete patient");
+		return "redirect:/";
 	}
 }

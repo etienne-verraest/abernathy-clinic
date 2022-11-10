@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +41,7 @@ class NoteWebControllerTests {
 
 	private static Patient patientMock;
 	private static NoteBean noteMock;
+	private static NoteDto noteDtoMock;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -56,6 +58,7 @@ class NoteWebControllerTests {
 
 		// Creating note for the patient
 		noteMock = new NoteBean("Note_1", new Date(), "AB10000", "He feels sick");
+		noteDtoMock = new NoteDto("AB10000", "He feels sick");
 	}
 
 	@Test
@@ -91,4 +94,75 @@ class NoteWebControllerTests {
 		mockMvc.perform(post("/{patientId}/notes/add", "AB10000").param("content", "")).andExpect(model().hasErrors());
 	}
 
+	@Test
+	void testShowUpdateNoteForm_Successful() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxyMock.getNote("Note_1")).thenReturn(noteMock);
+		when(modelMapper.map(noteMock, NoteDto.class)).thenReturn(noteDtoMock);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1"))
+				.andExpect(model().attributeExists("noteDto")).andExpect(status().isOk());
+	}
+
+	@Test
+	void testShowUpdateNoteForm_PatientIsInvalid() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(null);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1"))
+				.andExpect(flash().attributeExists("message")).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	void testShowUpdateNoteForm_NoteIsInvalid() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxyMock.getNote("Note_1")).thenReturn(null);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1"))
+				.andExpect(flash().attributeExists("message")).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	void testSubmitUpdateForm_Successful() throws Exception {
+
+		// ACT AND ASSERT
+		mockMvc.perform(post("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1") //
+				.param("patientId", "AB10000") //
+				.param("content", "He feels dizzy")) //
+				.andExpect(flash().attribute("message", "Note was successfully updated."))
+				.andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	void testSubmitUpdateForm_Invalid() throws Exception {
+
+		// ACT AND ASSERT
+		mockMvc.perform(post("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1") //
+				.param("patientId", "AB10000") //
+				.param("content", "")) //
+				.andExpect(model().hasErrors());
+	}
+
+	@Test
+	void testDeleteNote_Successful() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxyMock.getNote("Note_1")).thenReturn(noteMock);
+		when(notesProxyMock.deleteNoteById("Note_1")).thenReturn(true);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/delete", "AB10000", "Note_1"))
+				.andExpect(flash().attribute("message", "Note was successfully deleted."))
+				.andExpect(status().is3xxRedirection());
+
+	}
 }
