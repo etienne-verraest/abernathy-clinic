@@ -13,21 +13,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.abernathy.patients.bean.NoteBean;
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.model.dto.webforms.SearchPatientDto;
+import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 
 @Controller
-public class WebController {
-
-	// TODO : Set up Feign client
-	// TODO : Set up Notes Proxy
-	// TODO : Set up Notes Web Controller with UI
+public class PatientWebController {
 
 	@Autowired
 	PatientDao patientDao;
+
+	@Autowired
+	MicroserviceNotesProxy notesProxy;
 
 	/**
 	 * This method show the "Search Patientt" Form
@@ -99,6 +100,9 @@ public class WebController {
 			return "redirect:/";
 		}
 
+		List<NoteBean> notes = notesProxy.getPatientHistory(id);
+		model.addAttribute("hasNotes", !notes.isEmpty());
+		model.addAttribute("notes", notes);
 		model.addAttribute("patient", patient);
 		return "patient/view";
 	}

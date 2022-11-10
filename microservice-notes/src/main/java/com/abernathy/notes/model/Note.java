@@ -15,15 +15,10 @@ import lombok.ToString;
 @Document(collection = "notes")
 public class Note {
 
-	// TODO : Check if all attributes are present based on tests cases
-	// TODO : Validate fields in DTO
-
 	@Id
 	private String id;
 
 	private Date date;
-
-	private String practitioner;
 
 	private String patientId;
 
