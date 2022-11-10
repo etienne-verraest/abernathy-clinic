@@ -131,12 +131,12 @@ public class ApiController {
 	 * @throws PatientNotFoundException					Thrown if nobody was found given
 	 */
 	@DeleteMapping("/patients/{id}")
-	public String deletePatient(@PathVariable(required = true) String id) throws PatientNotFoundException {
+	public boolean deletePatient(@PathVariable String id) throws PatientNotFoundException {
 
 		// Checking if patient with given id exists
 		if (id != null && patientDao.getPatientById(id) != null) {
 			if (patientDao.deletePatient(id)) {
-				return "Patient with id : " + id + " was successfully deleted";
+				return true;
 			}
 		}
 		throw new PatientNotFoundException("Patient with given ID was not found.");

@@ -1,4 +1,4 @@
-package com.abernathy.patients.controller;
+package com.abernathy.webinterface.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -18,11 +18,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.abernathy.patients.bean.NoteBean;
-import com.abernathy.patients.dao.PatientDao;
-import com.abernathy.patients.model.Patient;
-import com.abernathy.patients.model.dto.NoteDto;
-import com.abernathy.patients.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.bean.NoteBean;
+import com.abernathy.webinterface.bean.PatientBean;
+import com.abernathy.webinterface.dto.NoteDto;
+import com.abernathy.webinterface.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.proxy.MicroservicePatientsProxy;
 
 @WebMvcTest(controllers = NoteWebController.class)
 class NoteWebControllerTests {
@@ -31,7 +31,7 @@ class NoteWebControllerTests {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private PatientDao patientDaoMock;
+	private MicroservicePatientsProxy patientsProxyMock;
 
 	@MockBean
 	private ModelMapper modelMapper;
@@ -39,7 +39,7 @@ class NoteWebControllerTests {
 	@MockBean
 	private MicroserviceNotesProxy notesProxyMock;
 
-	private static Patient patientMock;
+	private static PatientBean patientMock;
 	private static NoteBean noteMock;
 	private static NoteDto noteDtoMock;
 
@@ -47,7 +47,7 @@ class NoteWebControllerTests {
 	static void setUpBeforeClass() throws Exception {
 
 		// Creating a mock patient
-		patientMock = new Patient();
+		patientMock = new PatientBean();
 		patientMock.setFirstName("Alpha");
 		patientMock.setLastName("Bravo");
 		patientMock.setDateOfBirth("1998-02-16");
@@ -65,7 +65,7 @@ class NoteWebControllerTests {
 	void testShowNewNoteForm_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/{patientId}/notes/add", "AB10000")).andExpect(status().isOk())
@@ -98,7 +98,7 @@ class NoteWebControllerTests {
 	void testShowUpdateNoteForm_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
 		when(notesProxyMock.getNote("Note_1")).thenReturn(noteMock);
 		when(modelMapper.map(noteMock, NoteDto.class)).thenReturn(noteDtoMock);
 
@@ -111,7 +111,7 @@ class NoteWebControllerTests {
 	void testShowUpdateNoteForm_PatientIsInvalid() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(null);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(null);
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1"))
@@ -122,7 +122,7 @@ class NoteWebControllerTests {
 	void testShowUpdateNoteForm_NoteIsInvalid() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
 		when(notesProxyMock.getNote("Note_1")).thenReturn(null);
 
 		// ACT AND ASSERT
@@ -155,7 +155,7 @@ class NoteWebControllerTests {
 	void testDeleteNote_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
 		when(notesProxyMock.getNote("Note_1")).thenReturn(noteMock);
 		when(notesProxyMock.deleteNoteById("Note_1")).thenReturn(true);
 

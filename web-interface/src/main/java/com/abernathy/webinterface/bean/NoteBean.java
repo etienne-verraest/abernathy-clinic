@@ -1,4 +1,4 @@
-package com.abernathy.patients.bean;
+package com.abernathy.webinterface.bean;
 
 import java.util.Date;
 

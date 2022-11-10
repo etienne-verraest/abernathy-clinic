@@ -1,4 +1,4 @@
-package com.abernathy.patients.controller;
+package com.abernathy.webinterface.controller;
 
 import javax.validation.Valid;
 
@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.abernathy.patients.bean.NoteBean;
-import com.abernathy.patients.dao.PatientDao;
-import com.abernathy.patients.model.Patient;
-import com.abernathy.patients.model.dto.NoteDto;
-import com.abernathy.patients.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.bean.NoteBean;
+import com.abernathy.webinterface.bean.PatientBean;
+import com.abernathy.webinterface.dto.NoteDto;
+import com.abernathy.webinterface.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.proxy.MicroservicePatientsProxy;
 
 @Controller
 public class NoteWebController {
 
 	@Autowired
-	PatientDao patientDao;
+	ModelMapper modelMapper;
 
 	@Autowired
-	ModelMapper modelMapper;
+	MicroservicePatientsProxy patientsProxy;
 
 	@Autowired
 	MicroserviceNotesProxy notesProxy;
@@ -41,7 +41,7 @@ public class NoteWebController {
 	public String showNewForm(@PathVariable String patientId, NoteDto noteDto, RedirectAttributes redirectAttributes) {
 
 		// Checking if patient exists before showing form
-		Patient patient = patientDao.getPatientById(patientId);
+		PatientBean patient = patientsProxy.getPatientById(patientId);
 		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message",
 					String.format("Patient with id '%s' was not found", patientId));
@@ -85,7 +85,7 @@ public class NoteWebController {
 			RedirectAttributes redirectAttributes) {
 
 		// Check if patient exists
-		Patient patient = patientDao.getPatientById(patientId);
+		PatientBean patient = patientsProxy.getPatientById(patientId);
 		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message",
 					String.format("Patient with id '%s' was not found", patientId));
@@ -137,7 +137,7 @@ public class NoteWebController {
 			RedirectAttributes redirectAttributes) {
 
 		// Check if patient exists
-		Patient patient = patientDao.getPatientById(patientId);
+		PatientBean patient = patientsProxy.getPatientById(patientId);
 		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message",
 					String.format("Patient with id '%s' was not found", patientId));
