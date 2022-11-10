@@ -33,5 +33,5 @@ public interface MicroservicePatientsProxy {
 	PatientBean updatePatient(@PathVariable String id, @Valid @RequestBody PatientDto updatePatientDto);
 
 	@DeleteMapping("api/patients/{id}")
-	boolean deletePatient(@PathVariable String id);
+	String deletePatient(@PathVariable String id);
 }
