@@ -8,7 +8,8 @@
         <link rel="stylesheet" type="text/css" href="../webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
         <script type="text/javascript" src="../webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    </head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+      </head>
         
     <body>
 
@@ -45,18 +46,29 @@
 
                 <div class="col-8">
                     <div class="card">
-                        <h5 class="card-header">Notes <span th:if="${notesNumber > 0}" th:text="'(' + ${notesNumber} +')'">(1)</span></h5>
+                        <h5 class="card-header">Notes <span th:if="${hasNotes}" th:text="'(' + ${notesNumber} +')'">(1)</span></h5>
                         <div class="card-body">
                           <p class="card-text">  
                             
                             <!-- If patient doesn't have notes -->
                             <span th:if="${!hasNotes}">This patient doesn't have notes at the moment.</span>
   
+                            <div th:if="${message}" class="alert alert-info" role="alert" th:text="${message}">
+                              Note was successfully updated
+                            </div>
+                            
                             <!-- If patient has notes -->
                             <div class="card mb-2" th:if="${hasNotes}" th:each="note : ${notes}">
                               <div class="card-body">
-                                <h5 th:text="${note.date}">25 nov. 2015</h5>
+                                <h5 th:text="${note.date}">25 nov. 2015</h5></span>
                                 <span th:text="${note.content}">Practitioner's notes or recommandations</span>
+                                <br>
+                                <div class="row float-end">
+                                  <div class="col">
+                                  <a class="me-2" th:href="@{|/${patient.id}/notes/${note.id}/edit|}"><i class="bi bi-pencil"></i></a>
+                                  <a class=""><i class="bi bi-trash"></i></a>
+                                  </div>
+                                </div>
                               </div>
                             </div>
 

@@ -19,6 +19,9 @@ public interface MicroserviceNotesProxy {
 	@GetMapping("api/notes/{patientId}")
 	List<NoteBean> getPatientHistory(@PathVariable String patientId);
 
+	@GetMapping("api/note/{noteId}")
+	NoteBean getNote(@PathVariable String noteId);
+
 	@PostMapping("api/notes")
 	NoteBean addNoteToPatientHistory(@RequestBody NoteDto noteDto);
 

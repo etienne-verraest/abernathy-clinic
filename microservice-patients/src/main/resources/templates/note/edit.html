@@ -16,24 +16,24 @@
         <div class="container">
             <div class="row">
                 <div class="offset-3 col-6">
-                    <h1>Abernathy Clinic - Add note</h1>
+                    <h1>Abernathy Clinic - Edit Note</h1>
 
-                    <form method="post" th:action="@{|/${patientId}/notes/add|}" th:object="${noteDto}">
+                    <form method="post" th:action="@{|/${patientId}/notes/${noteId}/edit|}" th:object="${noteDto}">
                     
                         <!-- Patient ID -->
                         <div class="mb-1">
-                            <label for="patientId" class="form-label fw-bold">Patient ID :</label> <span th:text="${patientId}">EV50000</span>
-                            <input th:field="*{patientId}" type="hidden" class="form-control" id="patientId" th:value="${patientId}">
+                            <label for="patientId" class="form-label fw-bold">Patient ID :</label> <span th:text="*{patientId}">EV50000</span>
+                            <input th:field="*{patientId}" type="hidden" class="form-control" id="patientId" th:value="*{patientId}">
                         </div>
 
                         <!-- Content -->
                         <div class="mb-3">
                             <label for="content" class="form-label fw-bold">Notes/Recommandations</label>
-                            <textarea th:field="*{content}" class="form-control" id="content" rows="6"></textarea>
+                            <textarea th:field="*{content}" class="form-control" id="content" rows="6">Note with content</textarea>
                             <small th:errors="*{content}" class="text-danger">Content validation error</small>
                         </div>
 
-                        <input type="submit" class="btn btn-primary float-end" value="Add note to patient history">
+                        <input type="submit" class="btn btn-primary float-end" value="Edit">
                     
                     </form>
                 </div>

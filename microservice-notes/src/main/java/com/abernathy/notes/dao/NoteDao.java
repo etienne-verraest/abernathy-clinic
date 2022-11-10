@@ -2,6 +2,7 @@ package com.abernathy.notes.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,21 @@ public class NoteDao {
 			return noteRepository.findByPatientIdOrderByDateDesc(patientId);
 		}
 		throw new PatientNotFoundException("Patient with given ID was not found");
+	}
+
+	/**
+	 * Get a note by its note id
+	 *
+	 * @param noteId								String : The Id of the note (MongoDB Object ID)
+	 * @return										Returns the note if it exists
+	 * @throws NoteNotFoundException				Thrown if the note doesn't exist
+	 */
+	public Note getNoteById(String noteId) {
+		Optional<Note> note = noteRepository.findById(noteId);
+		if (note.isPresent()) {
+			return note.get();
+		}
+		return null;
 	}
 
 	/**
