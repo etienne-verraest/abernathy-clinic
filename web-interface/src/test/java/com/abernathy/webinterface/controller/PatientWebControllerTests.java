@@ -216,7 +216,8 @@ class PatientWebControllerTests {
 
 		// ARRANGE
 		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
-		when(patientsProxyMock.deletePatient("AB10000")).thenReturn(true);
+		when(patientsProxyMock.deletePatient("AB10000")).thenReturn(
+				"Patient with id 'AB10000' was successfully deleted. Notes attached to him were also deleted.");
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
@@ -227,11 +228,10 @@ class PatientWebControllerTests {
 	void testDeletePatient_Invalid() throws Exception {
 
 		// ARRANGE
-		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
-		when(patientsProxyMock.deletePatient("AB10000")).thenReturn(false);
+		when(patientsProxyMock.getPatientById(anyString())).thenReturn(null);
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
-				.andExpect(flash().attribute("message", "An error happened while trying to delete patient"));
+				.andExpect(flash().attribute("message", "Patient with id 'AB10000' was not found"));
 	}
 }

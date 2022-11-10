@@ -21,6 +21,7 @@ import com.abernathy.patients.exceptions.IncorrectFieldValueException;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
+import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
 @RestController
@@ -29,6 +30,9 @@ public class ApiController {
 
 	@Autowired
 	PatientDao patientDao;
+
+	@Autowired
+	MicroserviceNotesProxy notesProxy;
 
 	/**
 	 * Returns every patient if Optional parameters are NOT filled.
@@ -131,15 +135,26 @@ public class ApiController {
 	 * @throws PatientNotFoundException					Thrown if nobody was found given
 	 */
 	@DeleteMapping("/patients/{id}")
-	public boolean deletePatient(@PathVariable String id) throws PatientNotFoundException {
+	public String deletePatient(@PathVariable String id) throws PatientNotFoundException {
 
 		// Checking if patient with given id exists
 		if (id != null && patientDao.getPatientById(id) != null) {
-			if (patientDao.deletePatient(id)) {
-				// TODO : Implement note deletion
-				return true;
+
+			boolean notesDeleted = notesProxy.deleteAllNotesForPatientId(id);
+			// If patient had notes, we display a message to tell that the deletion was
+			// successful
+			if (patientDao.deletePatient(id) && notesDeleted) {
+				return String.format(
+						"Patient with id '%s' was successfully deleted. Notes attached to him were also deleted.", id);
 			}
+
+			// If there are no notes, we don't mention them.
+			if (patientDao.deletePatient(id) && !notesDeleted) {
+				return String.format("Patient with id '%s' was successfully deleted", id);
+			}
+
 		}
+
 		throw new PatientNotFoundException("Patient with given ID was not found.");
 	}
 

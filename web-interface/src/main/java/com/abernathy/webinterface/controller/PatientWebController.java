@@ -158,7 +158,6 @@ public class PatientWebController {
 
 		PatientDto patientDto = modelMapper.map(patient, PatientDto.class);
 		model.addAttribute("patientDto", patientDto);
-
 		return "patient/edit";
 	}
 
@@ -201,26 +200,9 @@ public class PatientWebController {
 			return "redirect:/";
 		}
 
-		// If patient had notes, we display a message to tell that the deletion was
-		// successful
-		boolean notesDeleted = notesProxy.deleteAllNotesForPatientId(patientId);
-		if (patientsProxy.deletePatient(patientId) && notesDeleted) {
-			redirectAttributes.addFlashAttribute("message",
-					String.format(
-							"Patient with id '%s' was successfully deleted. Notes attached to him were also deleted.",
-							patientId));
-			return "redirect:/";
-		}
-
-		// If there are no notes, we don't mention notes.
-		if (patientsProxy.deletePatient(patientId) && !notesDeleted) {
-			redirectAttributes.addFlashAttribute("message",
-					String.format("Patient with id '%s' was successfully deleted", patientId));
-			return "redirect:/";
-		}
-
-		// If deletion is not successful
-		redirectAttributes.addFlashAttribute("message", "An error happened while trying to delete patient");
+		// If patient is not null we proceed to deletion
+		String deletionMessage = patientsProxy.deletePatient(patientId);
+		redirectAttributes.addFlashAttribute("message", deletionMessage);
 		return "redirect:/";
 	}
 }
