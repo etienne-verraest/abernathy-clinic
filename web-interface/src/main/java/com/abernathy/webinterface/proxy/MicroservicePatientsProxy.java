@@ -24,7 +24,7 @@ public interface MicroservicePatientsProxy {
 			@RequestParam(required = false) String lastName);
 
 	@GetMapping("api/patients/{id}")
-	PatientBean getPatientById(@PathVariable("id") String id);
+	PatientBean getPatientById(@PathVariable String id);
 
 	@PostMapping("api/patients")
 	PatientBean registerPatient(@RequestBody PatientDto addPatientDto);

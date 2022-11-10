@@ -63,7 +63,7 @@ public class ApiController {
 	 * @throws PatientNotFoundException					Thrown if no patients were found
 	 */
 	@GetMapping("/patients/{id}")
-	public Patient getPatientById(@PathVariable(required = true) String id) throws PatientNotFoundException {
+	public Patient getPatientById(@PathVariable String id) throws PatientNotFoundException {
 
 		// Checking if ID is set
 		if (id != null) {
