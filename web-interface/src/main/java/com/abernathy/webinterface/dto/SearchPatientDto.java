@@ -1,4 +1,4 @@
-package com.abernathy.patients.model.dto.webforms;
+package com.abernathy.webinterface.dto;
 
 import javax.validation.constraints.NotBlank;
 

@@ -1,10 +1,11 @@
-package com.abernathy.patients.controller;
+package com.abernathy.webinterface.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,17 +17,17 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.abernathy.patients.bean.NoteBean;
-import com.abernathy.patients.dao.PatientDao;
-import com.abernathy.patients.exceptions.PatientNotFoundException;
-import com.abernathy.patients.model.Patient;
-import com.abernathy.patients.model.dto.PatientDto;
-import com.abernathy.patients.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.bean.NoteBean;
+import com.abernathy.webinterface.bean.PatientBean;
+import com.abernathy.webinterface.dto.PatientDto;
+import com.abernathy.webinterface.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.proxy.MicroservicePatientsProxy;
 
 @WebMvcTest(controllers = PatientWebController.class)
 class PatientWebControllerTests {
@@ -35,13 +36,16 @@ class PatientWebControllerTests {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private PatientDao patientDaoMock;
+	private MicroservicePatientsProxy patientsProxyMock;
 
 	@MockBean
 	private MicroserviceNotesProxy notesProxyMock;
 
-	private static List<Patient> patientsListMock = new ArrayList<Patient>();
-	private static Patient patientMock;
+	@MockBean
+	private ModelMapper modelMapper;
+
+	private static List<PatientBean> patientsListMock = new ArrayList<PatientBean>();
+	private static PatientBean patientMock;
 	private static PatientDto patientDtoMock;
 	private static NoteBean noteMock;
 
@@ -49,7 +53,7 @@ class PatientWebControllerTests {
 	static void initialization() throws Exception {
 
 		// Creating a mock patient for our operations
-		patientMock = new Patient();
+		patientMock = new PatientBean();
 		patientMock.setFirstName("Alpha");
 		patientMock.setLastName("Bravo");
 		patientMock.setDateOfBirth("1998-02-16");
@@ -86,14 +90,13 @@ class PatientWebControllerTests {
 	void testSubmitSearchPatienForm_NoPatientFound_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientsByFirstNameAndLastName("Zulu", "Foxtrot"))
-				.thenThrow(PatientNotFoundException.class);
+		when(patientsProxyMock.getPatients("Zulu", "Foxtrot")).thenReturn(null);
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/search") //
 				.param("firstName", "Zulu") //
 				.param("lastName", "Foxtrot")) //
-				.andExpect(status().isOk());
+				.andDo(print());
 
 	}
 
@@ -101,7 +104,7 @@ class PatientWebControllerTests {
 	void testSubmitSearchPatienForm_FoundOnePatient_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientsByFirstNameAndLastName("Alpha", "Bravo")).thenReturn(List.of(patientMock));
+		when(patientsProxyMock.getPatients("Alpha", "Bravo")).thenReturn(List.of(patientMock));
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/search") //
@@ -115,7 +118,7 @@ class PatientWebControllerTests {
 	void testSubmitSearchPatienForm_FoundTwoPatients_Successful() throws Exception {
 
 		// ARRANGE
-		Patient patientMock2 = new Patient();
+		PatientBean patientMock2 = new PatientBean();
 		patientMock2.setFirstName("Alpha");
 		patientMock2.setLastName("Bravo");
 		patientMock2.setDateOfBirth("1998-02-16");
@@ -123,8 +126,7 @@ class PatientWebControllerTests {
 		patientMock2.setGender("M");
 		patientMock2.setPhone("123-400-5000");
 		patientMock2.setId("AB20000");
-		when(patientDaoMock.getPatientsByFirstNameAndLastName("Alpha", "Bravo"))
-				.thenReturn(List.of(patientMock, patientMock2));
+		when(patientsProxyMock.getPatients("Alpha", "Bravo")).thenReturn(List.of(patientMock, patientMock2));
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/search") //
@@ -138,7 +140,7 @@ class PatientWebControllerTests {
 	void testShowPatientView_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
 		when(notesProxyMock.getPatientHistory("AB10000")).thenReturn(List.of(noteMock));
 
 		// ACT AND ASSERT
@@ -161,8 +163,7 @@ class PatientWebControllerTests {
 	void testSubmitAddPatientForm_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.mapToEntity(patientDtoMock)).thenReturn(patientMock);
-		when(patientDaoMock.savePatient(patientMock)).thenReturn(patientMock);
+		when(patientsProxyMock.registerPatient(patientDtoMock)).thenReturn(patientMock);
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/patient/add") //
@@ -180,8 +181,7 @@ class PatientWebControllerTests {
 	void testShowUpdatePatient_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
-		when(patientDaoMock.mapToDto(patientMock)).thenReturn(patientDtoMock);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/update/{id}", "AB10000")) //
@@ -192,8 +192,7 @@ class PatientWebControllerTests {
 	void testSubmitUpdatePatient_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.mapToEntity(any(PatientDto.class))).thenReturn(patientMock);
-		when(patientDaoMock.updatePatient(any(Patient.class), anyString())).thenReturn(patientMock);
+		when(patientsProxyMock.updatePatient(anyString(), any(PatientDto.class))).thenReturn(patientMock);
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/patient/update") //
@@ -212,8 +211,7 @@ class PatientWebControllerTests {
 	void testSubmitUpdatePatient_ContentIsInvalid() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.mapToEntity(any(PatientDto.class))).thenReturn(patientMock);
-		when(patientDaoMock.updatePatient(any(Patient.class), anyString())).thenReturn(patientMock);
+		when(patientsProxyMock.updatePatient(anyString(), any(PatientDto.class))).thenReturn(patientMock);
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/patient/update") //
@@ -231,8 +229,8 @@ class PatientWebControllerTests {
 	void testDeletePatient_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
-		when(patientDaoMock.deletePatient("AB10000")).thenReturn(true);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.deletePatient("AB10000")).thenReturn(true);
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
@@ -243,8 +241,8 @@ class PatientWebControllerTests {
 	void testDeletePatient_Invalid() throws Exception {
 
 		// ARRANGE
-		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
-		when(patientDaoMock.deletePatient("AB10000")).thenReturn(false);
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(patientsProxyMock.deletePatient("AB10000")).thenReturn(false);
 
 		// ACT AND ASSERT
 		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //

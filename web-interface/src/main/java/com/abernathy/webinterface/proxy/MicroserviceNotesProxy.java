@@ -1,4 +1,4 @@
-package com.abernathy.patients.proxy;
+package com.abernathy.webinterface.proxy;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.abernathy.patients.bean.NoteBean;
-import com.abernathy.patients.model.dto.NoteDto;
+import com.abernathy.webinterface.bean.NoteBean;
+import com.abernathy.webinterface.dto.NoteDto;
 
 @FeignClient(name = "microservice-notes", url = "localhost:9002")
 public interface MicroserviceNotesProxy {

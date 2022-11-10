@@ -1,9 +1,10 @@
-package com.abernathy.patients.controller;
+package com.abernathy.webinterface.controller;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,19 +14,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.abernathy.patients.bean.NoteBean;
-import com.abernathy.patients.dao.PatientDao;
-import com.abernathy.patients.exceptions.PatientNotFoundException;
-import com.abernathy.patients.model.Patient;
-import com.abernathy.patients.model.dto.PatientDto;
-import com.abernathy.patients.model.dto.webforms.SearchPatientDto;
-import com.abernathy.patients.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.bean.NoteBean;
+import com.abernathy.webinterface.bean.PatientBean;
+import com.abernathy.webinterface.dto.PatientDto;
+import com.abernathy.webinterface.dto.SearchPatientDto;
+import com.abernathy.webinterface.proxy.MicroserviceNotesProxy;
+import com.abernathy.webinterface.proxy.MicroservicePatientsProxy;
 
 @Controller
 public class PatientWebController {
 
 	@Autowired
-	PatientDao patientDao;
+	ModelMapper modelMapper;
+
+	@Autowired
+	MicroservicePatientsProxy patientsProxy;
 
 	@Autowired
 	MicroserviceNotesProxy notesProxy;
@@ -61,16 +64,10 @@ public class PatientWebController {
 
 		String firstName = searchPatientDto.getFirstName();
 		String lastName = searchPatientDto.getLastName();
-		List<Patient> patients;
 
 		// First we check for the PatientNotFoundException, if caught we display the
 		// search form again
-		try {
-			patients = patientDao.getPatientsByFirstNameAndLastName(firstName, lastName);
-		} catch (PatientNotFoundException e) {
-			model.addAttribute("message", e.getMessage());
-			return "index";
-		}
+		List<PatientBean> patients = patientsProxy.getPatients(firstName, lastName);
 
 		// If there is only one patient found, then we directly display the patient view
 		// Otherwise we display search results of every patient found
@@ -94,7 +91,7 @@ public class PatientWebController {
 	@GetMapping("/search/{id}")
 	public String showPatientView(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
 
-		Patient patient = patientDao.getPatientById(id);
+		PatientBean patient = patientsProxy.getPatientById(id);
 		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
@@ -138,8 +135,7 @@ public class PatientWebController {
 			return "patient/add";
 		}
 
-		Patient patient = patientDao.mapToEntity(patientDto);
-		patient = patientDao.savePatient(patient);
+		PatientBean patient = patientsProxy.registerPatient(patientDto);
 		return "redirect:/search/" + patient.getId();
 
 	}
@@ -152,16 +148,16 @@ public class PatientWebController {
 	 * @throws PatientNotFoundException				Thrown if id was not found in database
 	 */
 	@GetMapping("/patient/update/{id}")
-	public String showUpdatePatientForm(@PathVariable("id") String id, Model model,
-			RedirectAttributes redirectAttributes) {
+	public String showUpdatePatientForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
 
-		Patient patient = patientDao.getPatientById(id);
+		PatientBean patient = patientsProxy.getPatientById(id);
 		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
 
-		PatientDto patientDto = patientDao.mapToDto(patient);
+		PatientDto patientDto = modelMapper.map(patient, PatientDto.class);
+		patientDto.setId(id);
 		model.addAttribute("patientDto", patientDto);
 		return "patient/edit";
 	}
@@ -181,9 +177,8 @@ public class PatientWebController {
 		}
 
 		// Mapping and updating the patient
-		Patient patient = patientDao.mapToEntity(patientDto);
-		patient = patientDao.updatePatient(patient, patientDto.getId());
-
+		PatientBean patient = modelMapper.map(patientDto, PatientBean.class);
+		patient = patientsProxy.updatePatient(patientDto.getId(), patientDto);
 		redirectAttributes.addFlashAttribute("message",
 				String.format("Patient with id '%s' was successfully updated", patientDto.getId()));
 		return "redirect:/search/" + patient.getId();
@@ -191,17 +186,16 @@ public class PatientWebController {
 	}
 
 	@GetMapping("/patient/delete/{id}")
-	public String deletePatient(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes)
-			throws PatientNotFoundException {
+	public String deletePatient(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
 
-		Patient patient = patientDao.getPatientById(id);
+		PatientBean patient = patientsProxy.getPatientById(id);
 		if (patient == null) {
 			redirectAttributes.addFlashAttribute("message", String.format("Patient with id '%s' was not found", id));
 			return "redirect:/";
 		}
 
 		// If there is no exception caught we delete the patient
-		if (patientDao.deletePatient(id)) {
+		if (patientsProxy.deletePatient(id)) {
 			redirectAttributes.addFlashAttribute("message",
 					String.format("Patient with id '%s' was successfully deleted", id));
 			return "redirect:/";
