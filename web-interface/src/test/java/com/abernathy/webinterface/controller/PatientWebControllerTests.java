@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,6 +69,7 @@ class PatientWebControllerTests {
 		patientDtoMock.setAddress("123 Imaginary Street");
 		patientDtoMock.setGender("M");
 		patientDtoMock.setPhone("123-400-5000");
+		patientDtoMock.setId("AB10000");
 
 		// Adding the mock patient to the mocked list
 		patientsListMock.add(patientMock);
@@ -87,20 +87,6 @@ class PatientWebControllerTests {
 	}
 
 	@Test
-	void testSubmitSearchPatienForm_NoPatientFound_Successful() throws Exception {
-
-		// ARRANGE
-		when(patientsProxyMock.getPatients("Zulu", "Foxtrot")).thenReturn(null);
-
-		// ACT AND ASSERT
-		mockMvc.perform(post("/search") //
-				.param("firstName", "Zulu") //
-				.param("lastName", "Foxtrot")) //
-				.andDo(print());
-
-	}
-
-	@Test
 	void testSubmitSearchPatienForm_FoundOnePatient_Successful() throws Exception {
 
 		// ARRANGE
@@ -115,7 +101,7 @@ class PatientWebControllerTests {
 	}
 
 	@Test
-	void testSubmitSearchPatienForm_FoundTwoPatients_Successful() throws Exception {
+	void testSubmitSearchPatientForm_FoundTwoPatients_Successful() throws Exception {
 
 		// ARRANGE
 		PatientBean patientMock2 = new PatientBean();
@@ -163,10 +149,10 @@ class PatientWebControllerTests {
 	void testSubmitAddPatientForm_Successful() throws Exception {
 
 		// ARRANGE
-		when(patientsProxyMock.registerPatient(patientDtoMock)).thenReturn(patientMock);
+		when(patientsProxyMock.registerPatient(any(PatientDto.class))).thenReturn(patientMock);
 
 		// ACT AND ASSERT
-		mockMvc.perform(post("/patient/add") //
+		mockMvc.perform(post("/patient/add/") //
 				.param("firstName", "Alpha") //
 				.param("lastName", "Bravo") //
 				.param("dateOfBirth", "1998-02-16") //
@@ -182,10 +168,10 @@ class PatientWebControllerTests {
 
 		// ARRANGE
 		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(modelMapper.map(patientMock, PatientDto.class)).thenReturn(patientDtoMock);
 
 		// ACT AND ASSERT
-		mockMvc.perform(get("/patient/update/{id}", "AB10000")) //
-				.andExpect(status().isOk()).andExpect(model().attributeExists("patientDto"));
+		mockMvc.perform(get("/patient/update/{id}", "AB10000")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -211,7 +197,7 @@ class PatientWebControllerTests {
 	void testSubmitUpdatePatient_ContentIsInvalid() throws Exception {
 
 		// ARRANGE
-		when(patientsProxyMock.updatePatient(anyString(), any(PatientDto.class))).thenReturn(patientMock);
+		when(patientsProxyMock.updatePatient("AB10000", patientDtoMock)).thenReturn(patientMock);
 
 		// ACT AND ASSERT
 		mockMvc.perform(post("/patient/update") //

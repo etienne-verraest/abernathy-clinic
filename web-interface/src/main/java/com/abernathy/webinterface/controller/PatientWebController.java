@@ -157,8 +157,8 @@ public class PatientWebController {
 		}
 
 		PatientDto patientDto = modelMapper.map(patient, PatientDto.class);
-		patientDto.setId(id);
 		model.addAttribute("patientDto", patientDto);
+
 		return "patient/edit";
 	}
 
@@ -176,11 +176,10 @@ public class PatientWebController {
 			return "patient/edit";
 		}
 
-		// Mapping and updating the patient
-		PatientBean patient = modelMapper.map(patientDto, PatientBean.class);
-		patient = patientsProxy.updatePatient(patientDto.getId(), patientDto);
+		// Updating the patient
+		PatientBean patient = patientsProxy.updatePatient(patientDto.getId(), patientDto);
 		redirectAttributes.addFlashAttribute("message",
-				String.format("Patient with id '%s' was successfully updated", patientDto.getId()));
+				String.format("Patient with id '%s' was successfully updated", patient.getId()));
 		return "redirect:/search/" + patient.getId();
 
 	}
