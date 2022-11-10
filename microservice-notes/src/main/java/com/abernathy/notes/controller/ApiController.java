@@ -38,6 +38,18 @@ public class ApiController {
 	}
 
 	/**
+	 * Get a note given its id
+	 *
+	 * @param noteId								String : The ID of the Note (MongoDB Object ID)
+	 * @return										Returns the note
+	 * @throws NoteNotFoundException				Thrown if the Note was not found
+	 */
+	@GetMapping("note/{noteId}")
+	public Note getNote(@PathVariable String noteId) {
+		return noteDao.getNoteById(noteId);
+	}
+
+	/**
 	 * Add a note to a given patient
 	 *
 	 * @param noteDto								NoteDto : Object that contains attributes for the note
@@ -60,7 +72,7 @@ public class ApiController {
 	 * @throws PatientNotFoundException				Thrown if the Patient was not found
 	 */
 	@PutMapping("notes/{noteId}")
-	public Note updateNoteById(@PathVariable("noteId") String noteId, @RequestBody NoteDto noteDto)
+	public Note updateNoteById(@PathVariable String noteId, @RequestBody NoteDto noteDto)
 			throws NoteNotFoundException, PatientNotFoundException {
 		Note note = noteDao.mapToEntity(noteDto);
 		return noteDao.updateNote(noteId, note);
