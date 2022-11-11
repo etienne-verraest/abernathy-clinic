@@ -6,8 +6,9 @@ From this service and its API specifications, you will be able to create, update
 Microservice is built with the followings technologies :
 - Java 11 and Spring Framework 2.7.5
 - MySQL for database management system
+- Maven for the application lifecycle management
 
-Thanks to the Spring Framework, it is possible to use "starters" such as Feign, that acts as an intermediary for microservices to communicate
+Thanks to the Spring Framework, it is possible to use dependencies such as *Feign*, that acts as an intermediary for microservices to communicate
 
 ## API Specifications
 **Microservice url is configured to serve datas on `localhost:9001`**.
