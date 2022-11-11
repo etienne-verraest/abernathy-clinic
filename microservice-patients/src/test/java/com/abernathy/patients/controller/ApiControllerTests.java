@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
+import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(controllers = ApiController.class)
@@ -35,6 +36,9 @@ class ApiControllerTests {
 
 	@MockBean
 	private PatientDao patientDaoMock;
+
+	@MockBean
+	MicroserviceNotesProxy notesProxy;
 
 	private static List<Patient> patientsListMock = new ArrayList<Patient>();
 	private static Patient patientMock;

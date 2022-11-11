@@ -165,4 +165,43 @@ class NoteWebControllerTests {
 				.andExpect(status().is3xxRedirection());
 
 	}
+
+	@Test
+	void testDeleteNote_PatientNotFound() throws Exception {
+
+		// ARRANGE
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(null);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/delete", "AB10000", "Note_1"))
+				.andExpect(flash().attributeExists("message"));
+
+	}
+
+	@Test
+	void testDeleteNote_NoteNotFound() throws Exception {
+
+		// ARRANGE
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxyMock.getNote("Note_1")).thenReturn(null);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/delete", "AB10000", "Note_1"))
+				.andExpect(flash().attributeExists("message"));
+
+	}
+
+	@Test
+	void testDeleteNote_PatientIdNoteEquals() throws Exception {
+
+		// ARRANGE
+		NoteBean noteMock2 = new NoteBean("Note_2", new Date(), "AB20000", "He feels sick");
+		when(patientsProxyMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxyMock.getNote("Note_2")).thenReturn(noteMock2);
+
+		// ACT AND ASSERT
+		mockMvc.perform(get("/{patientId}/notes/{noteId}/delete", "AB10000", "Note_2"))
+				.andExpect(flash().attributeExists("message"));
+
+	}
 }
