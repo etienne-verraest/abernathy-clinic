@@ -21,6 +21,8 @@ import com.abernathy.webinterface.dto.SearchPatientDto;
 import com.abernathy.webinterface.proxy.MicroserviceNotesProxy;
 import com.abernathy.webinterface.proxy.MicroservicePatientsProxy;
 
+import feign.FeignException;
+
 @Controller
 public class PatientWebController {
 
@@ -67,7 +69,13 @@ public class PatientWebController {
 
 		// First we check for the PatientNotFoundException, if caught we display the
 		// search form again
-		List<PatientBean> patients = patientsProxy.getPatients(firstName, lastName);
+		List<PatientBean> patients;
+		try {
+			patients = patientsProxy.getPatients(firstName, lastName);
+		} catch (FeignException e) {
+			redirectAttributes.addFlashAttribute("message", "Patient was not found");
+			return "redirect:/";
+		}
 
 		// If there is only one patient found, then we directly display the patient view
 		// Otherwise we display search results of every patient found
