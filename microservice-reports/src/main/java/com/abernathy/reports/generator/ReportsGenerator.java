@@ -29,7 +29,7 @@ public class ReportsGenerator {
 
 	/**
 	 * Generate a full report based on different criterias
-	 *
+	 * We are not checking for any nullity because Feign will throw an exception if the patient is not found
 	 *
 	 * @param patientId
 	 */
@@ -37,29 +37,26 @@ public class ReportsGenerator {
 
 		// Getting the patient
 		PatientBean patient = patientsProxy.getPatientById(patientId);
-
 		// Getting notes related to the patients
 		List<NoteBean> notes = notesProxy.getPatientHistory(patientId);
 
-		if (patient != null) {
-			int age = calculateAge(patient.getDateOfBirth());
-			if (!notes.isEmpty()) {
-				// Find triggers from notes
-				List<String> triggersList = findTriggersFromHistory(notes);
+		// Calculating the age for the patient
+		int age = calculateAge(patient.getDateOfBirth());
 
-				// Calculate the risk
-				String risk = calculateRisk(triggersList.size(), age, patient.getGender());
+		if (!notes.isEmpty()) {
+			// Find triggers from notes
+			List<String> triggersList = findTriggersFromHistory(notes);
 
-				// Returning a "Report" object
-				return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
-						patient.getDateOfBirth(), age, risk, triggersList);
-			} else {
-				return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
-						patient.getDateOfBirth(), age, "None", Collections.emptyList());
-			}
+			// Calculate the risk
+			String risk = calculateRisk(triggersList.size(), age, patient.getGender());
+
+			// Returning a "Report" object
+			return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
+					patient.getDateOfBirth(), age, risk, triggersList);
+		} else {
+			return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
+					patient.getDateOfBirth(), age, "None", Collections.emptyList());
 		}
-
-		return null;
 	}
 
 	/**
