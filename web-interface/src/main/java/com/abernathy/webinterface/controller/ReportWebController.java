@@ -21,6 +21,12 @@ public class ReportWebController {
 	@Autowired
 	MicroserviceReportsProxy reportsProxy;
 
+	/**
+	 * Generate the report for a given patient
+	 *
+	 * @param patientId									String : The patient ID we want to generate the report
+	 * @return											Shows the report
+	 */
 	@GetMapping("/{patientId}/report/generate")
 	public String generateReport(@PathVariable String patientId, RedirectAttributes redirectAttributes, Model model) {
 
@@ -32,8 +38,15 @@ public class ReportWebController {
 			return "redirect:/";
 		}
 
+		// Getting reports from the dedicated microservice
 		ReportBean report = reportsProxy.generateReport(patientId);
-		model.addAttribute("report", report);
-		return "report/view";
+		if (report != null) {
+			model.addAttribute("patient", patient);
+			model.addAttribute("report", report);
+			return "report/view";
+		}
+
+		redirectAttributes.addFlashAttribute("message", "Could not generate report for this patient");
+		return "redirect:/search/" + patientId;
 	}
 }
