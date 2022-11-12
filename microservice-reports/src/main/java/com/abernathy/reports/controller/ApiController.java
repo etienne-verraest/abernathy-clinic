@@ -1,13 +1,29 @@
 package com.abernathy.reports.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.abernathy.reports.generator.ReportsGenerator;
+import com.abernathy.reports.model.Report;
 
 @RestController
 @RequestMapping("api/")
 public class ApiController {
 
-	// TODO : Implement report generator service
-	// TODO : Implement Api URL to generate report
+	@Autowired
+	ReportsGenerator reportsGenerator;
+
+	@GetMapping("/reports/generate/{patientId}")
+	public Report generateReport(@PathVariable String patientId) throws Exception {
+
+		if (reportsGenerator.generateReports(patientId) != null) {
+			return reportsGenerator.generateReports(patientId);
+		}
+
+		throw new RuntimeException("Could not generate a report");
+	}
 
 }
