@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+    
+    <head>
+        <meta charset="utf-8"/>
+        <title>Abernathy Clinic - Patient Report</title>
+        <link rel="stylesheet" type="text/css" href="../webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
+        <script type="text/javascript" src="../webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+      </head>
+        
+    <body>
+
+        <div class="container">
+            <div class="row">
+                <div class="offset-2 col-8">
+                    <h1>Abernathy Clinic - Patient Report</h1>
+                    <div class="card">
+                        <h5 class="card-header">Patient Information</h5>
+                        <div class="card-body">
+                        
+						  <!-- Patient information -->
+                          <p class="card-text">
+                            <span class="fw-bold">ID : </span><span th:text="${patient.id}">MV50540</span><br>
+                            <span class="fw-bold">Name : </span><span th:text="${patient.firstName} + ' ' + ${patient.lastName}">Max Verstappen</span><br>
+                            <span class="fw-bold">Birthdate : </span><span th:text="${patient.dateOfBirth}">1998-02-16</span><br>
+                            <span class="fw-bold">Gender : </span>
+                            	<span th:if="${patient.gender == 'M'}" th:text="Male">Male</span>
+                            	<span th:if="${patient.gender == 'F'}" th:text="Female">Female</span>
+                            <br><span class="fw-bold">Address : </span><span th:text="${patient.address}">123 Imaginary St.</span><br>
+                            <span class="fw-bold">Phone : </span><span th:text="${patient.phone}">000-000-0000</span><br>
+                          </p>
+                          
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2 row">
+                <div class="offset-2 col-8">
+                    <div class="card">
+                        <h5 class="card-header">Report information</h5>
+                        <div class="card-body">
+                        
+						  <!-- Report information -->
+                          <p class="card-text">
+                            
+                          </p>
+                          
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>

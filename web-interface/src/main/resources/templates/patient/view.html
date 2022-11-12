@@ -48,9 +48,12 @@
                       <a th:href="@{|/${patient.id}/notes/add|}" class="col-12 btn btn-primary">Add note</a>
                     </div>
 
-                    <!-- Generate report button -->
-                    <div class="mt-3">
-                      <a href="#" class="col-12 btn btn-success">Generate report</a>
+                    <!-- Reports area -->
+                    <div th:if="${!hasNotes}" class="mt-3 text-center">
+                      <span class="col-12 fw-semibold">Report generation will be available when the patient has at least one note in his history.</span>
+                    </div>
+                    <div th:if="${hasNotes}" class="mt-3">
+                      <a th:href="@{|/${patient.id}/report/generate|}" class="col-12 btn btn-success">Generate report</a>
                     </div>
                 </div>
 
