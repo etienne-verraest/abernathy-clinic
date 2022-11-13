@@ -110,7 +110,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "ZF11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "ZF11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "ZF11000", "Patient is a Smoker");
 		notesMock.addAll(List.of(note1, note2));
 
 		when(patientsProxy.getPatientById("ZF11000")).thenReturn(patientOver30);
@@ -130,7 +130,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "HC11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "HC11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "HC11000", "Patient is a Smoker");
 		NoteBean note3 = new NoteBean("Note_3", new Date(), "HC11000",
 				"Patient gained Weight by eating too much pizzas");
 		notesMock.addAll(List.of(note1, note2, note3));
@@ -152,7 +152,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "EB11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "EB11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "EB11000", "Patient is a Smoker");
 		NoteBean note3 = new NoteBean("Note_3", new Date(), "EB11000",
 				"Patient gained Weight by eating too much pizzas");
 		NoteBean note4 = new NoteBean("Note_4", new Date(), "EB11000", "Patient Relapse on Alcohool");
@@ -175,7 +175,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "ZF11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "ZF11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "ZF11000", "Patient is a Smoker");
 		NoteBean note3 = new NoteBean("Note_3", new Date(), "ZF11000",
 				"Patient gained Weight by eating too much pizzas");
 		NoteBean note4 = new NoteBean("Note_4", new Date(), "ZF11000", "Patient Relapse on Alcohool");
@@ -201,7 +201,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "HC11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "HC11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "HC11000", "Patient is a Smoker");
 		NoteBean note3 = new NoteBean("Note_3", new Date(), "HC11000",
 				"Patient gained Weight by eating too much pizzas");
 		NoteBean note4 = new NoteBean("Note_4", new Date(), "HC11000", "Patient Relapse on Alcohool");
@@ -227,7 +227,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "EB11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "EB11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "EB11000", "Patient is a Smoker");
 		NoteBean note3 = new NoteBean("Note_3", new Date(), "EB11000",
 				"Patient gained Weight by eating too much pizzas");
 		NoteBean note4 = new NoteBean("Note_4", new Date(), "EB11000", "Patient Relapse on Alcohool");
@@ -254,7 +254,7 @@ class ReportsGeneratorTests {
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
 		NoteBean note1 = new NoteBean("Note_1", new Date(), "ZF11000", "Hemoglobin A1C check required");
-		NoteBean note2 = new NoteBean("Note_2", new Date(), "ZF11000", "Patient started Smoking again");
+		NoteBean note2 = new NoteBean("Note_2", new Date(), "ZF11000", "Patient is a Smoker");
 		NoteBean note3 = new NoteBean("Note_3", new Date(), "ZF11000",
 				"Patient gained Weight by eating too much pizzas");
 		NoteBean note4 = new NoteBean("Note_4", new Date(), "ZF11000", "Patient Relapse on Alcohool");
