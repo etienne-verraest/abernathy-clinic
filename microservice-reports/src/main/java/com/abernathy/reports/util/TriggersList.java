@@ -6,7 +6,7 @@ import java.util.List;
 public class TriggersList {
 
 	// Array containg every triggers words
-	static String[] triggers = new String[] { "Hemoglobin A1C", "Microalbumin", "Height", "Weight", "Smoking",
+	static String[] triggers = new String[] { "Hemoglobin A1C", "Microalbumin", "Height", "Weight", "Smoker",
 			"Abnormal", "Cholesterol", "Vertigo", "Relapse", "Reaction", "Antibodies" };
 
 	/**
