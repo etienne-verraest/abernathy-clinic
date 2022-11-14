@@ -24,6 +24,8 @@ import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("api/")
 public class ApiController {
@@ -44,6 +46,7 @@ public class ApiController {
 	 * @return											List<Patient> containing possible patients
 	 * @throws PatientNotFoundException					Thrown if nobody was found
 	 */
+	@ApiOperation(value = "Get a list of patients (optional : given their first and last name)")
 	@GetMapping("/patients")
 	public List<Patient> getPatients(@RequestParam(required = false) String firstName,
 			@RequestParam(required = false) String lastName) throws PatientNotFoundException {
@@ -66,6 +69,7 @@ public class ApiController {
 	 * @return											ResponseEntity containg patient information if found
 	 * @throws PatientNotFoundException					Thrown if no patients were found
 	 */
+	@ApiOperation(value = "Get a patient given its ID")
 	@GetMapping("/patients/{id}")
 	public Patient getPatientById(@PathVariable String id) throws PatientNotFoundException {
 
@@ -84,6 +88,7 @@ public class ApiController {
 	 * @return											Patient if fields are valid
 	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 */
+	@ApiOperation(value = "Create a new Patient")
 	@PostMapping("/patients")
 	public Patient registerPatient(@Valid @RequestBody PatientDto addPatientDto, Errors errors)
 			throws IncorrectFieldValueException {
@@ -110,6 +115,7 @@ public class ApiController {
 	 * @throws IncorrectFieldValueException				Thrown if a field in the request body is incorrect
 	 * @throws PatientNotFoundException					Thrown if the patient was not found
 	 */
+	@ApiOperation(value = "Update a patient given its ID")
 	@PutMapping("/patients/{id}")
 	public Patient updatePatient(@PathVariable String id, @Valid @RequestBody PatientDto updatePatientDto,
 			Errors errors) throws IncorrectFieldValueException, PatientNotFoundException {
@@ -138,6 +144,7 @@ public class ApiController {
 	 * @return											A message if the operation was successfull
 	 * @throws PatientNotFoundException					Thrown if nobody was found given
 	 */
+	@ApiOperation(value = "Delete a patient given its ID")
 	@DeleteMapping("/patients/{id}")
 	public String deletePatient(@PathVariable String id) throws PatientNotFoundException {
 

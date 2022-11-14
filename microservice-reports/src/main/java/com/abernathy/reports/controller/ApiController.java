@@ -10,6 +10,8 @@ import com.abernathy.reports.exception.PatientNotFoundException;
 import com.abernathy.reports.generator.ReportsGenerator;
 import com.abernathy.reports.model.Report;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("api/")
 public class ApiController {
@@ -17,6 +19,14 @@ public class ApiController {
 	@Autowired
 	ReportsGenerator reportsGenerator;
 
+	/**
+	 * Generate a diabete risk report given a patient ID
+	 *
+	 * @param patientId								String : The Patient ID
+	 * @return										Returns a Report object containing datas if generation is successful
+	 * @throws PatientNotFoundException				Thrown if patient was not found
+	 */
+	@ApiOperation(value = "Generate a diabete risk report given a patient ID")
 	@GetMapping("/reports/generate/{patientId}")
 	public Report generateReport(@PathVariable String patientId) throws PatientNotFoundException {
 
