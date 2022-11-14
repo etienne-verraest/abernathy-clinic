@@ -119,6 +119,10 @@ public class ApiController {
 			ValidationErrorBuilderUtil.buildErrorMessage(errors);
 		}
 
+		if (getPatientById(id) == null) {
+			throw new PatientNotFoundException("Patient with given ID was not found");
+		}
+
 		// Fetching patient from database, if nobody was found an exception is thrown
 		// Update patient with new information, the id generated is saved and not
 		// re-generated on update
