@@ -10,48 +10,85 @@ Microservice is built with the followings technologies :
 
 Thanks to the Spring Framework, it is possible to use dependencies such as *Feign*, that acts as an intermediary for microservices to communicate
 
-## API Specifications
-**Microservice url is configured to serve datas on `localhost:9002`**.
-Each url is prefixed with `api/`
+# API Specifications
+**Microservice url is configured to serve datas on `localhost:9002/api/`**. <br>
+In order to function, patient microservice must be started.
 
-### GET `/notes/{patientId}`
-Get every notes related to a given patient (recognizable by its ID). Response is composed of multiple notes (see below for an example).
+## GET `/notes/{patientId}`
+Get every notes related to a given patient (recognizable by its ID). Response is composed of multiple notes.
 
-### GET `/note/{noteId}`
-This route gets a single note, based on the note ID. Example of response could be :
+### Response example
+**URL : `localhost:9002/api/notes/RD11971/`**
+```json
+[
+    {
+        "id": "6372910a44d5562320acad2e",
+        "date": "2022-11-14T19:03:38.096+00:00",
+        "patientId": "RD11971",
+        "content": "Patient has gained 10 lbs in 1 month"
+    },
+    {
+        "id": "637290f244d5562320acad2d",
+        "date": "2022-11-14T19:03:14.847+00:00",
+        "patientId": "RD11971",
+        "content": "Patient states that she is a smoker"
+    }
+]
+```
+
+## GET `/note/{noteId}`
+This route gets a single note, based on the note ID.
+
+### Response example
+**URL : `localhost:9002/api/note/6372910a44d5562320acad2e`**
 ```json
 {
-    "id": "636e5f27623af62b82e1a772",
-    "date": "2022-11-11T14:41:43.592+00:00",
-    "patientId": "LH76662",
-    "content": "Patient feels tired. Blood check needed"
+    "id": "6372910a44d5562320acad2e",
+    "date": "2022-11-14T19:03:38.096+00:00",
+    "patientId": "RD11971",
+    "content": "Patient has gained 10 lbs in 1 month"
 }
 ```
 
-### POST `/notes/`
-This route creates a note for a given patient. Patient must exist in order to add notes. The following JSON can be used in the body to send datas : 
+## POST `/notes/`
+This route creates a note for a given patient. Patient must exist in order to add notes.
+
+### Content example
+**URL : `localhost:9002/api/notes`**
 ```json
 {
-  "patientId": "LH76662",
-  "content": "Patient feels tired. Blood check needed"
+  "patientId": "RD11971",
+  "content": "Patient states that she is a smoker"
 }
 ```
-**Gender takes either the value of M (for "Male") or F (for "Female").**
 
-### PUT `/notes/{noteId}`
+## PUT `/notes/{noteId}`
 This route updates a note based on its ID. Patient must exist in order to update the note, and the note must be linked to the given patientID. <br>
-The following JSON can be used in the body to send datas (the same that is used on POST route) :
 
+### Content example
+**URL : `localhost:9002/api/notes/6372910a44d5562320acad2e`**
 ```json
 {
-  "patientId": "LH57530",
-  "content": "Blood check required on an empty stomach"
+  "patientId": "RD11971",
+  "content": "Patient has gained 12 lbs in 1 month"
 }
 ```
 
-### DELETE `/notes/{noteId}`
+## DELETE `/notes/{noteId}`
 This route delete a single note based on its ID. If the operation is successful, a boolean set to true is returned.
 
-### DELETE `/notes/all/{patientId}/`
+### Response example
+**URL : `localhost:9002/api/notes/637290f244d5562320acad2d`**
+```json
+true
+```
+
+## DELETE `/notes/all/{patientId}/`
 This route deletes every notes included in the patient history. It is used primarily by the patients microservice when DELETE route is called.
 If the operation is successful, a boolean set to true is returned.
+
+### Response example
+**URL : `localhost:9002/api/notes/all/RD11971`**
+```json
+true
+```
