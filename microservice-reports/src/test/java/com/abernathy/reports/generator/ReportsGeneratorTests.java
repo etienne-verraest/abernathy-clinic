@@ -71,7 +71,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_PatientOver30_NoTriggers_ShouldReturnNone() {
+	void testGenerateReports_PatientOver30_NoTriggers_ShouldReturnNone() throws Exception {
 
 		// ARRANGE
 		when(patientsProxy.getPatientById("ZF11000")).thenReturn(patientOver30);
@@ -86,7 +86,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_PatientOver30_HasNotesButNoTriggers_ShouldReturnNone() {
+	void testGenerateReports_PatientOver30_HasNotesButNoTriggers_ShouldReturnNone() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -105,7 +105,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_PatientOver30_2Triggers_ShouldReturnBorderline() {
+	void testGenerateReports_PatientOver30_2Triggers_ShouldReturnBorderline() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -125,7 +125,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_ManUnder30_3Triggers_ShouldReturnInDanger() {
+	void testGenerateReports_ManUnder30_3Triggers_ShouldReturnInDanger() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -147,7 +147,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_WomanUnder30_4Triggers_ShouldReturnInDanger() {
+	void testGenerateReports_WomanUnder30_4Triggers_ShouldReturnInDanger() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -170,7 +170,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_PatientOver30_6Triggers_ShouldReturnInDanger() {
+	void testGenerateReports_PatientOver30_6Triggers_ShouldReturnInDanger() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -196,7 +196,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_ManUnder30_6Triggers_ShouldReturnEarlyOnset() {
+	void testGenerateReports_ManUnder30_6Triggers_ShouldReturnEarlyOnset() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -222,7 +222,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_WomanUnder30_7Triggers_ShouldReturnEarlyOnset() {
+	void testGenerateReports_WomanUnder30_7Triggers_ShouldReturnEarlyOnset() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
@@ -249,7 +249,7 @@ class ReportsGeneratorTests {
 	}
 
 	@Test
-	void testGenerateReports_PatientOver30_8Triggers_ShouldReturnEarlyOnset() {
+	void testGenerateReports_PatientOver30_8Triggers_ShouldReturnEarlyOnset() throws Exception {
 
 		// ARRANGE
 		ArrayList<NoteBean> notesMock = new ArrayList<>();
