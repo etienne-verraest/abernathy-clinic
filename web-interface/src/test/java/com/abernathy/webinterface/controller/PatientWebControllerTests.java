@@ -96,7 +96,7 @@ class PatientWebControllerTests {
 		mockMvc.perform(post("/search") //
 				.param("firstName", "Alpha") //
 				.param("lastName", "Bravo")) //
-				.andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/AB10000"));
+				.andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/AB10000/"));
 
 	}
 
@@ -130,7 +130,7 @@ class PatientWebControllerTests {
 		when(notesProxyMock.getPatientHistory("AB10000")).thenReturn(List.of(noteMock));
 
 		// ACT AND ASSERT
-		mockMvc.perform(get("/{id}", "AB10000")) //
+		mockMvc.perform(get("/{id}/", "AB10000")) //
 				.andExpect(status().isOk()).andExpect(model().attributeExists("patient"))
 				.andExpect(model().attributeExists("notes"));
 

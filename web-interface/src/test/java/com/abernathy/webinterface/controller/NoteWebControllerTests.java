@@ -133,6 +133,9 @@ class NoteWebControllerTests {
 	@Test
 	void testSubmitUpdateForm_Successful() throws Exception {
 
+		// ARRANGE
+		when(notesProxyMock.getNote("Note_1")).thenReturn(noteMock);
+
 		// ACT AND ASSERT
 		mockMvc.perform(post("/{patientId}/notes/{noteId}/edit", "AB10000", "Note_1") //
 				.param("patientId", "AB10000") //
