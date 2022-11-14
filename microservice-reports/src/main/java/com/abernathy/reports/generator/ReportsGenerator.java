@@ -21,6 +21,10 @@ import com.abernathy.reports.util.TriggersList;
 @Component
 public class ReportsGenerator {
 
+	// FIXME : PatientID check not null
+	// FIXME : Catch FeignException
+	// TODO : Swagger + Documentation .docx
+
 	@Autowired
 	MicroservicePatientsProxy patientsProxy;
 
@@ -37,13 +41,14 @@ public class ReportsGenerator {
 
 		// Getting the patient
 		PatientBean patient = patientsProxy.getPatientById(patientId);
+
 		// Getting notes related to the patients
 		List<NoteBean> notes = notesProxy.getPatientHistory(patientId);
 
 		// Calculating the age for the patient
 		int age = calculateAge(patient.getDateOfBirth());
 
-		if (!notes.isEmpty()) {
+		if (notes != null && !notes.isEmpty()) {
 			// Find triggers from notes
 			List<String> triggersList = findTriggersFromHistory(notes);
 

@@ -17,7 +17,7 @@
                 <div class="offset-3 col-6">
                     <h1>Abernathy Clinic - Edit Note</h1>
 
-                    <form method="post" th:action="@{|/notes/${noteId}/edit|}" th:object="${noteDto}">
+                    <form method="post" th:action="@{|${patientId}/notes/${noteId}/edit|}" th:object="${noteDto}">
                     
                         <!-- Patient ID -->
                         <div class="mb-1">
