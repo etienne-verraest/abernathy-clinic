@@ -12,7 +12,7 @@ public class SearchPatientDto {
 	@NotBlank(message = "First name must not be blank")
 	private String firstName;
 
-	@NotBlank(message = "First name must not be blank")
+	@NotBlank(message = "Last name must not be blank")
 	private String lastName;
 
 }

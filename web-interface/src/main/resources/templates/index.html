@@ -33,9 +33,13 @@
                         <small th:errors="*{lastName}" class="text-danger">Last Name validation error</small>
 
                         <br>
-                        <input type="submit" class="btn btn-primary float-end" value="Search Patient">
+                        <div class="row mt-2">
+                            <div class="col">
+                                <a class="float-start text-decoration-none btn btn-secondary" href="/patient/add"><i class="bi bi-person-plus"></i> Add a patient </a>
+                                <button type="submit" class="float-end btn btn-primary"><i class="bi bi-search"></i> Search Patient</button>
+                            </div>
+                        </div>
                     </form>
-                    <a class="align-middle" href="/patient/add">Add a patient </a>
                 </div>
             </div>
 

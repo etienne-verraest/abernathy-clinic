@@ -155,7 +155,7 @@ public class PatientWebController {
 	 * @param id									String : the id of the patient
 	 * @throws PatientNotFoundException				Thrown if id was not found in database
 	 */
-	@GetMapping("/patient/update/{id}")
+	@GetMapping("/{id}/patient/update")
 	public String showUpdatePatientForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
 
 		PatientBean patient = patientsProxy.getPatientById(id);
@@ -197,7 +197,7 @@ public class PatientWebController {
 	 * @param patientId								String : The Patient ID
 	 * @return										Redirect to the homepage and show appropriate message depending on case
 	 */
-	@GetMapping("/patient/delete/{patientId}")
+	@GetMapping("/{patientId}/patient/delete")
 	public String deletePatient(@PathVariable String patientId, Model model, RedirectAttributes redirectAttributes) {
 
 		// Checking if patient exists
