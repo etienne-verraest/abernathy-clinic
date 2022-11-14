@@ -17,33 +17,35 @@
 
             <!-- Table of search results  -->
             <div class="row">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Date of Birth</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>View</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                    <tr th:each="patient : ${patients}">
-                            <td th:text="${patient.id}"></td>
-                            <td th:text="${patient.firstName}"></td>
-                            <td th:text="${patient.lastName}"></td>
-                            <td th:text="${patient.dateOfBirth}"></td>
-                            <td th:text="${patient.address}"></td>
-                            <td th:text="${patient.phone}"></td>
-                            <td style="width: 15%" class="text-center">
-                                <a th:href="@{|/search/${patient.id}|}">View</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Date of Birth</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                        <tr th:each="patient : ${patients}">
+                                <td th:text="${patient.id}"></td>
+                                <td th:text="${patient.firstName}"></td>
+                                <td th:text="${patient.lastName}"></td>
+                                <td th:text="${patient.dateOfBirth}"></td>
+                                <td th:text="${patient.address}"></td>
+                                <td th:text="${patient.phone}"></td>
+                                <td style="width: 15%" class="text-center">
+                                    <a th:href="@{|/${patient.id}|}">View</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
             </div>
 
         </div>

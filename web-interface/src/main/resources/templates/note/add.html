@@ -31,8 +31,12 @@
                             <small th:errors="*{content}" class="text-danger">Content validation error</small>
                         </div>
 
-                        <input type="submit" class="btn btn-primary float-end" value="Add note to patient history">
-                    
+                        <div class="row mt-2">
+                            <div class="col">
+                                <a class="float-start text-decoration-none btn btn-danger" href="../"><i class="bi bi-arrow-return-left"></i> Cancel </a>
+                                <button type="submit" class="float-end btn btn-primary"><i class="bi bi-plus-lg"></i> Add note to patient's history</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

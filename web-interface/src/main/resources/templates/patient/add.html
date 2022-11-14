@@ -72,8 +72,12 @@
                             </div>
                         </div>
                           
-                        
-                        <input type="submit" class="btn btn-primary float-end" value="Add Patient">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <a th:href="@{/}" class="btn btn-danger float-start"><i class="bi bi-arrow-return-left"></i> Cancel</a>
+                                <button type="submit" class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i> Add Patient</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

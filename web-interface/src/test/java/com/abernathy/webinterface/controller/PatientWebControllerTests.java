@@ -171,7 +171,7 @@ class PatientWebControllerTests {
 		when(modelMapper.map(patientMock, PatientDto.class)).thenReturn(patientDtoMock);
 
 		// ACT AND ASSERT
-		mockMvc.perform(get("/patient/update/{id}", "AB10000")).andExpect(status().isOk());
+		mockMvc.perform(get("/{id}/patient/update/", "AB10000")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -220,7 +220,7 @@ class PatientWebControllerTests {
 				"Patient with id 'AB10000' was successfully deleted. Notes attached to him were also deleted.");
 
 		// ACT AND ASSERT
-		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
+		mockMvc.perform(get("/{id}/patient/delete/", "AB10000")) //
 				.andExpect(status().is3xxRedirection()).andExpect(flash().attributeExists("message"));
 	}
 
@@ -231,7 +231,7 @@ class PatientWebControllerTests {
 		when(patientsProxyMock.getPatientById(anyString())).thenReturn(null);
 
 		// ACT AND ASSERT
-		mockMvc.perform(get("/patient/delete/{id}", "AB10000")) //
+		mockMvc.perform(get("/{id}/patient/delete/", "AB10000")) //
 				.andExpect(flash().attribute("message", "Patient with id 'AB10000' was not found"));
 	}
 }
