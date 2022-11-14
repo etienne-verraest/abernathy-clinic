@@ -10,21 +10,84 @@ Microservice is built with the followings technologies :
 
 Thanks to the Spring Framework, it is possible to use dependencies such as *Feign*, that acts as an intermediary for microservices to communicate
 
-## API Specifications
+# API Specifications
 **Microservice url is configured to serve datas on `localhost:9001`**.
 Each url is prefixed with `api/`
 
-### GET `/patients`
-`/patients` can be called with two optional parameters : first name and last name
+## GET `/patients` (without parameters)
+This route gets the list of every patients registered in database
 
-- `Without parameters` : Gets the list of every patients registered in database
-- `/patients?firstName=[firstName]&lastName=[lastName]` : Gets patients that are registered with the given first name and last name.
+### Response example
+```json
+[
+    {
+        "id": "LH76662",
+        "firstName": "LEWIS",
+        "lastName": "HAMILTON",
+        "dateOfBirth": "1960-02-16",
+        "gender": "M",
+        "address": "123 Imaginary Street",
+        "phone": "000-111-2222"
+    },
+    {
+        "id": "EK61059",
+        "firstName": "ELIUD",
+        "lastName": "KIPCHOGE",
+        "dateOfBirth": "1998-02-16",
+        "gender": "M",
+        "address": "534 Stadium Track",
+        "phone": "111-222-3333"
+    }
+]
+```
 
-### GET `/patients/{id}`
+## GET `/patients?firstName=[firstName]&lastName=[lastName]`
+This route gets patients that are registered with the given first name and last name.
+
+### Response example
+```json
+[
+    {
+        "id": "LH76662",
+        "firstName": "LEWIS",
+        "lastName": "HAMILTON",
+        "dateOfBirth": "1960-02-16",
+        "gender": "M",
+        "address": "123 Imaginary Street",
+        "phone": "000-111-2222"
+    },
+    {
+        "id": "LH27624",
+        "firstName": "LEWIS",
+        "lastName": "HAMILTON",
+        "dateOfBirth": "1990-12-31",
+        "gender": "F",
+        "address": "789 Formula 1 Circuit",
+        "phone": "789-101-1112"
+    }
+]
+```
+
+## GET `/patients/{id}`
 This route gets a patient by its ID. Only one patient will be returned from this route, if the patient exists.
 
-### POST `/patients/`
-This route creates a patient. Fields are validated and a custom error message will be returned if there are any. The following JSON can be used in the body to send datas :
+### Response example
+```json
+{
+    "id": "LH76662",
+    "firstName": "LEWIS",
+    "lastName": "HAMILTON",
+    "dateOfBirth": "1960-02-16",
+    "gender": "M",
+    "address": "123 Imaginary Street",
+    "phone": "000-111-2222"
+}
+```
+
+## POST `/patients/`
+This route creates a patient. Fields are validated and a custom error message will be returned if there are any. 
+
+### Content example
 ```json
 {
     "firstName": "firstName",
@@ -37,7 +100,7 @@ This route creates a patient. Fields are validated and a custom error message wi
 ```
 **Gender takes either the value of M (for "Male") or F (for "Female").**
 
-### PUT `/patients/{id}`
+## PUT `/patients/{id}`
 This route updates a patient given its ID. Fields are validated and a custom error message will be returned if there are any. The following JSON can be used in the body to send datas (the same that is used on POST route) :
 ```json
 {
@@ -50,6 +113,11 @@ This route updates a patient given its ID. Fields are validated and a custom err
 }
 ```
 
-### DELETE `/patients/{id}`
+## DELETE `/patients/{id}`
 This route deletes a patient from database, given its ID. It also deletes attached notes from the notes microservice (if there are any).
 A message will indicate if the operation is successful.
+
+### Response example
+```json
+Patient with id 'LH90033' was successfully deleted. Notes attached to him were also deleted.
+```
