@@ -101,6 +101,21 @@ class ApiControllerTests {
 	}
 
 	@Test
+	void testAddBadContentNoteToPatientHistory_ShouldReturn_BadRequest() throws Exception {
+
+		NoteDto badNoteDtoMock = new NoteDto();
+		badNoteDtoMock.setPatientId("AB10000");
+		badNoteDtoMock.setContent("");
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(badNoteDtoMock);
+
+		// ACT AND ASSERT
+		mockMvc.perform(post("/api/notes").content(json).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)) //
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	void testUpdateNoteById_ShouldBe_StatusOk() throws Exception {
 
 		// ARRANGE
