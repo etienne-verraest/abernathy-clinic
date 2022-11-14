@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.abernathy.reports.bean.NoteBean;
 import com.abernathy.reports.bean.PatientBean;
+import com.abernathy.reports.exception.PatientNotFoundException;
 import com.abernathy.reports.model.Report;
 import com.abernathy.reports.proxy.MicroserviceNotesProxy;
 import com.abernathy.reports.proxy.MicroservicePatientsProxy;
@@ -20,10 +21,6 @@ import com.abernathy.reports.util.TriggersList;
 
 @Component
 public class ReportsGenerator {
-
-	// FIXME : PatientID check not null
-	// FIXME : Catch FeignException
-	// TODO : Swagger + Documentation .docx
 
 	@Autowired
 	MicroservicePatientsProxy patientsProxy;
@@ -36,32 +33,40 @@ public class ReportsGenerator {
 	 * We are not checking for any nullity because Feign will throw an exception if the patient is not found
 	 *
 	 * @param patientId
+	 * @throws Exception
 	 */
-	public Report generateReports(String patientId) {
+	public Report generateReports(String patientId) throws PatientNotFoundException {
 
-		// Getting the patient
-		PatientBean patient = patientsProxy.getPatientById(patientId);
+		if (patientId != null) {
 
-		// Getting notes related to the patients
-		List<NoteBean> notes = notesProxy.getPatientHistory(patientId);
+			PatientBean patient = patientsProxy.getPatientById(patientId);
+			if (patient == null) {
+				throw new PatientNotFoundException("Patient with given ID was not found");
+			}
 
-		// Calculating the age for the patient
-		int age = calculateAge(patient.getDateOfBirth());
+			// Calculating the age for the patient
+			int age = calculateAge(patient.getDateOfBirth());
 
-		if (notes != null && !notes.isEmpty()) {
-			// Find triggers from notes
-			List<String> triggersList = findTriggersFromHistory(notes);
+			// Getting notes related to the patients
+			List<NoteBean> notes = notesProxy.getPatientHistory(patientId);
 
-			// Calculate the risk
-			String risk = calculateRisk(triggersList.size(), age, patient.getGender());
+			if (notes != null && !notes.isEmpty()) {
+				// Find triggers from notes
+				List<String> triggersList = findTriggersFromHistory(notes);
 
-			// Returning a "Report" object
-			return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
-					patient.getDateOfBirth(), age, risk, triggersList);
-		} else {
-			return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
-					patient.getDateOfBirth(), age, "None", Collections.emptyList());
+				// Calculate the risk
+				String risk = calculateRisk(triggersList.size(), age, patient.getGender());
+
+				// Returning a "Report" object
+				return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
+						patient.getDateOfBirth(), age, risk, triggersList);
+			} else {
+				return new Report(patientId, patient.getFirstName(), patient.getLastName(), patient.getGender(),
+						patient.getDateOfBirth(), age, "None", Collections.emptyList());
+			}
 		}
+
+		throw new PatientNotFoundException("Patient with given ID was not found");
 	}
 
 	/**

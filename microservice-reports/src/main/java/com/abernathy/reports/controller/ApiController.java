@@ -23,7 +23,7 @@ public class ApiController {
 			return reportsGenerator.generateReports(patientId);
 		}
 
-		throw new RuntimeException("Could not generate a report");
+		return null;
 	}
 
 }
