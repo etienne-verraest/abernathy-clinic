@@ -11,32 +11,41 @@ Microservice is built with the followings technologies :
 Thanks to the Spring Framework, it is possible to use dependencies such as *Feign*, that acts as an intermediary for microservices to communicate
 
 # API Specifications
-**Microservice url is configured to serve datas on `localhost:9001`**.
-Each url is prefixed with `api/`
+**Microservice url is configured to serve datas on `localhost:9001/api/`**.
 
 ## GET `/patients` (without parameters)
 This route gets the list of every patients registered in database
 
 ### Response example
+**URL : `localhost:9001/api/patients`**
 ```json
 [
     {
-        "id": "LH76662",
-        "firstName": "LEWIS",
-        "lastName": "HAMILTON",
-        "dateOfBirth": "1960-02-16",
+        "id": "ED88884",
+        "firstName": "ETIENNE",
+        "lastName": "DUPONT",
+        "dateOfBirth": "1998-12-31",
         "gender": "M",
-        "address": "123 Imaginary Street",
-        "phone": "000-111-2222"
+        "address": "123 rue des Pommiers",
+        "phone": "789-101-1112"
     },
     {
-        "id": "EK61059",
-        "firstName": "ELIUD",
-        "lastName": "KIPCHOGE",
-        "dateOfBirth": "1998-02-16",
+        "id": "ED45951",
+        "firstName": "ETIENNE",
+        "lastName": "DUPONT",
+        "dateOfBirth": "1968-12-31",
         "gender": "M",
-        "address": "534 Stadium Track",
-        "phone": "111-222-3333"
+        "address": "456 Rue des Cerisiers",
+        "phone": "808-404-2020"
+    },
+    {
+        "id": "RD11971",
+        "firstName": "RENÉE",
+        "lastName": "DUPONT",
+        "dateOfBirth": "1938-12-31",
+        "gender": "F",
+        "address": "789 rue des Tulipes",
+        "phone": "986-123-4444"
     }
 ]
 ```
@@ -45,25 +54,26 @@ This route gets the list of every patients registered in database
 This route gets patients that are registered with the given first name and last name.
 
 ### Response example
+**URL : `localhost:9001/api/patients?firstName=Etienne&lastName=Dupont`**
 ```json
 [
     {
-        "id": "LH76662",
-        "firstName": "LEWIS",
-        "lastName": "HAMILTON",
-        "dateOfBirth": "1960-02-16",
+        "id": "ED88884",
+        "firstName": "ETIENNE",
+        "lastName": "DUPONT",
+        "dateOfBirth": "1998-12-31",
         "gender": "M",
-        "address": "123 Imaginary Street",
-        "phone": "000-111-2222"
+        "address": "123 rue des Pommiers",
+        "phone": "789-101-1112"
     },
     {
-        "id": "LH27624",
-        "firstName": "LEWIS",
-        "lastName": "HAMILTON",
-        "dateOfBirth": "1990-12-31",
-        "gender": "F",
-        "address": "789 Formula 1 Circuit",
-        "phone": "789-101-1112"
+        "id": "ED45951",
+        "firstName": "ETIENNE",
+        "lastName": "DUPONT",
+        "dateOfBirth": "1968-12-31",
+        "gender": "M",
+        "address": "456 Rue des Cerisiers",
+        "phone": "808-404-2020"
     }
 ]
 ```
@@ -72,15 +82,16 @@ This route gets patients that are registered with the given first name and last 
 This route gets a patient by its ID. Only one patient will be returned from this route, if the patient exists.
 
 ### Response example
+**URL : `localhost:9001/api/patients/RD11971/`**
 ```json
 {
-    "id": "LH76662",
-    "firstName": "LEWIS",
-    "lastName": "HAMILTON",
-    "dateOfBirth": "1960-02-16",
-    "gender": "M",
-    "address": "123 Imaginary Street",
-    "phone": "000-111-2222"
+    "id": "RD11971",
+    "firstName": "RENÉE",
+    "lastName": "DUPONT",
+    "dateOfBirth": "1938-12-31",
+    "gender": "F",
+    "address": "789 rue des Tulipes",
+    "phone": "986-123-4444"
 }
 ```
 
@@ -88,6 +99,7 @@ This route gets a patient by its ID. Only one patient will be returned from this
 This route creates a patient. Fields are validated and a custom error message will be returned if there are any. 
 
 ### Content example
+**URL : `localhost:9001/api/patients/`**
 ```json
 {
     "firstName": "firstName",
@@ -100,24 +112,29 @@ This route creates a patient. Fields are validated and a custom error message wi
 ```
 **Gender takes either the value of M (for "Male") or F (for "Female").**
 
-## PUT `/patients/{id}`
+## PUT `/patients/{id}/`
 This route updates a patient given its ID. Fields are validated and a custom error message will be returned if there are any. The following JSON can be used in the body to send datas (the same that is used on POST route) :
+
+### Content example
+**URL : `localhost:9001/api/patients/RD11971/`**
 ```json
 {
-    "firstName": "firstName",
-    "lastName": "lastName",
-    "dateOfBirth": "YYYY-MM-DD",
-    "gender": "M",
-    "address": "Address",
-    "phone": "XXX-XXX-XXXX"
+    "firstName": "RENÉE",
+    "lastName": "DUPONT",
+    "dateOfBirth": "1938-12-31",
+    "gender": "F",
+    "address": "789 rue des Tulipes, Boite Postale 2",
+    "phone": "986-123-4444"
 }
 ```
 
 ## DELETE `/patients/{id}`
+
 This route deletes a patient from database, given its ID. It also deletes attached notes from the notes microservice (if there are any).
 A message will indicate if the operation is successful.
 
 ### Response example
+**URL : `localhost:9001/api/patients/ED88884/`**
 ```json
-Patient with id 'LH90033' was successfully deleted. Notes attached to him were also deleted.
+Patient with id 'ED88884' was successfully deleted. Notes attached to him were also deleted.
 ```
