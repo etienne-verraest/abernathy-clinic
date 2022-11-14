@@ -32,8 +32,8 @@ public class ReportsGenerator {
 	 * Generate a full report based on different criterias
 	 * We are not checking for any nullity because Feign will throw an exception if the patient is not found
 	 *
-	 * @param patientId
-	 * @throws Exception
+	 * @param patientId									String : The patient's ID
+	 * @throws PatientNotFoundException					Thrown if the patient was not found
 	 */
 	public Report generateReports(String patientId) throws PatientNotFoundException {
 

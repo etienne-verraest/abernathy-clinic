@@ -120,6 +120,12 @@ public class NoteWebController {
 			return "note/edit";
 		}
 
+		NoteBean note = notesProxy.getNote(noteId);
+		if (note == null) {
+			redirectAttributes.addFlashAttribute("message", "Note was not found.");
+			return "redirect:/" + patientId + "/";
+		}
+
 		redirectAttributes.addFlashAttribute("message", "Note was successfully updated.");
 		notesProxy.updateNoteById(noteId, noteDto);
 		return "redirect:/" + noteDto.getPatientId() + "/";

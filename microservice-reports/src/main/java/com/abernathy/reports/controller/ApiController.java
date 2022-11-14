@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abernathy.reports.exception.PatientNotFoundException;
 import com.abernathy.reports.generator.ReportsGenerator;
 import com.abernathy.reports.model.Report;
 
@@ -17,7 +18,7 @@ public class ApiController {
 	ReportsGenerator reportsGenerator;
 
 	@GetMapping("/reports/generate/{patientId}")
-	public Report generateReport(@PathVariable String patientId) throws Exception {
+	public Report generateReport(@PathVariable String patientId) throws PatientNotFoundException {
 
 		if (reportsGenerator.generateReports(patientId) != null) {
 			return reportsGenerator.generateReports(patientId);

@@ -2,7 +2,10 @@ package com.abernathy.notes.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abernathy.notes.dao.NoteDao;
+import com.abernathy.notes.exception.IncorrectFieldValueException;
 import com.abernathy.notes.exception.NoteNotFoundException;
 import com.abernathy.notes.exception.PatientNotFoundException;
 import com.abernathy.notes.model.Note;
 import com.abernathy.notes.model.dto.NoteDto;
+import com.abernathy.notes.util.ValidationErrorBuilderUtil;
 
 @RestController
 @RequestMapping("api/")
@@ -45,19 +50,26 @@ public class ApiController {
 	 * @throws NoteNotFoundException				Thrown if the Note was not found
 	 */
 	@GetMapping("note/{noteId}")
-	public Note getNote(@PathVariable String noteId) {
+	public Note getNote(@PathVariable String noteId) throws NoteNotFoundException {
 		return noteDao.getNoteById(noteId);
 	}
 
 	/**
 	 * Add a note to a given patient
 	 *
-	 * @param noteDto								NoteDto : Object that contains attributes for the note
-	 * @return										Returns the Note if the operation is successful
-	 * @throws PatientNotFoundException             Thrown if Patient with given ID was not found
+	 * @param noteDto									NoteDto : Object that contains attributes for the note
+	 * @return											Returns the Note if the operation is successful
+	 * @throws PatientNotFoundException             	Thrown if Patient with given ID was not found
+	 * @throws IncorrectFieldValueException				Thrown if one (or more) fields are incorrect
 	 */
 	@PostMapping("notes")
-	public Note addNoteToPatientHistory(@RequestBody NoteDto noteDto) throws PatientNotFoundException {
+	public Note addNoteToPatientHistory(@Valid @RequestBody NoteDto noteDto, Errors errors)
+			throws PatientNotFoundException, IncorrectFieldValueException {
+
+		if (errors.hasErrors()) {
+			ValidationErrorBuilderUtil.buildErrorMessage(errors);
+		}
+
 		Note note = noteDao.mapToEntity(noteDto);
 		return noteDao.createNote(note);
 	}
@@ -65,15 +77,21 @@ public class ApiController {
 	/**
 	 * Update a note given its ID
 	 *
-	 * @param noteId								String : the note ID (MongoDB Object ID)
-	 * @param noteDto								NoteDto containing information for update
-	 * @return										Returns the updated note
-	 * @throws NoteNotFoundException				Thrown if the Note was not found
-	 * @throws PatientNotFoundException				Thrown if the Patient was not found
+	 * @param noteId									String : the note ID (MongoDB Object ID)
+	 * @param noteDto									NoteDto containing information for update
+	 * @return											Returns the updated note
+	 * @throws NoteNotFoundException					Thrown if the Note was not found
+	 * @throws PatientNotFoundException					Thrown if the Patient was not found
+	 * @throws IncorrectFieldValueException				Thrown if one (or more) fields are incorrect
 	 */
 	@PutMapping("notes/{noteId}")
-	public Note updateNoteById(@PathVariable String noteId, @RequestBody NoteDto noteDto)
-			throws NoteNotFoundException, PatientNotFoundException {
+	public Note updateNoteById(@PathVariable String noteId, @Valid @RequestBody NoteDto noteDto, Errors errors)
+			throws NoteNotFoundException, PatientNotFoundException, IncorrectFieldValueException {
+
+		if (errors.hasErrors()) {
+			ValidationErrorBuilderUtil.buildErrorMessage(errors);
+		}
+
 		Note note = noteDao.mapToEntity(noteDto);
 		return noteDao.updateNote(noteId, note);
 	}
