@@ -5,8 +5,6 @@
     <head>
         <meta charset="utf-8"/>
         <title>Abernathy Clinic - Patient Report</title>
-        <link rel="stylesheet" type="text/css" href="../webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
-        <script type="text/javascript" src="../webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
       </head>
@@ -15,8 +13,14 @@
 
         <div class="container">
             <div class="row">
-                <div class="offset-2 col-8">
+                <div class="offset-3 col-6">
                     <h1>Abernathy Clinic - Patient Report</h1>
+                    <a th:href="@{|/${patient.id}|}" class="float-start"><button class="btn btn-primary btn-sm float-end"><i class="bi bi-arrow-return-left"></i> Back</button></a> <button onClick="window.print()" class="btn btn-primary btn-sm float-end"><i class="bi bi-printer"></i> Print this page</button>
+                </div>
+            </div>
+            
+            <div class="mt-2 row">
+                <div class="offset-3 col-6">
                     <div class="card">
                         <h5 class="card-header">Patient Information</h5>
                         <div class="card-body">
@@ -40,17 +44,24 @@
             </div>
 
             <div class="mt-2 row">
-                <div class="offset-2 col-8">
+                <div class="offset-3 col-6">
                     <div class="card">
                         <h5 class="card-header">Report information</h5>
                         <div class="card-body">
                         
-						  <!-- Report information -->
-                          <p class="card-text">
-                            
+						  <!-- Report information for patient where risk is everything but None -->
+                          <p class="card-text" th:if="${report.risk != 'None'}">
+                            After analyzing your history we have found <span class="fw-semibold" th:text="${triggersNumber}">1</span> triggers keywords that indicates a potential diabetes risk.<br><br>
+                            Based on the information you have provided on registration (especially your age) and your appointments' notes with your practitioner, we have calculated that you have a potential <span class="fw-semibold" th:text="${report.risk}">Borderline</span> risk.<br><br>
+                            The triggers keywords that we found are the followings : <span class="fw-semibold" th:text="${triggersString}">height, weight, etc</span><br><br>
+                            You are advised to follow the recommendations given by your practitioner and to make regular appointments with him/her.
                           </p>
                           
-                    
+                           <!-- Report information for patient where risk is None -->
+                           <p class="card-text" th:if="${report.risk == 'None'}">
+                            After analyzing your history we haven't found any triggers keywords that would indicate a potential diabetes risk.<br><br>
+                            However, you are advised to keep a healthy lifestyle and make regular appointments with your practitioner for prevention purposes.
+                          </p>        
                         </div>
                     </div>
                 </div>

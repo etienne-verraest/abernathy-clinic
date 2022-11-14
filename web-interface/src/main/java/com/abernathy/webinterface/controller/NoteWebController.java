@@ -70,7 +70,7 @@ public class NoteWebController {
 
 		// Otherwise we call our proxy method and add it to the database
 		notesProxy.addNoteToPatientHistory(noteDto);
-		return "redirect:/search/" + patientId;
+		return "redirect:/" + patientId;
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class NoteWebController {
 
 		redirectAttributes.addFlashAttribute("message", "Note was successfully updated.");
 		notesProxy.updateNoteById(noteId, noteDto);
-		return "redirect:/search/" + noteDto.getPatientId();
+		return "redirect:/" + noteDto.getPatientId();
 	}
 
 	/**
@@ -148,20 +148,20 @@ public class NoteWebController {
 		NoteBean note = notesProxy.getNote(noteId);
 		if (note == null) {
 			redirectAttributes.addFlashAttribute("message", "Note was not found");
-			return "redirect:/search/" + patientId;
+			return "redirect:/" + patientId;
 		}
 
 		// Check if patient Id are the same (in path and in note)
 		if (!note.getPatientId().equals(patientId)) {
 			redirectAttributes.addFlashAttribute("message",
 					"You are trying to delete a note that doesn't belong to the correct patient");
-			return "redirect:/search/" + patientId;
+			return "redirect:/" + patientId;
 		}
 
 		// Delete the note if every checks have passed
 		notesProxy.deleteNoteById(noteId);
 		redirectAttributes.addFlashAttribute("message", "Note was successfully deleted.");
-		return "redirect:/search/" + patientId;
+		return "redirect:/" + patientId;
 
 	}
 }

@@ -12,6 +12,9 @@ import com.abernathy.webinterface.bean.ReportBean;
 import com.abernathy.webinterface.proxy.MicroservicePatientsProxy;
 import com.abernathy.webinterface.proxy.MicroserviceReportsProxy;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class ReportWebController {
 
@@ -43,10 +46,23 @@ public class ReportWebController {
 		if (report != null) {
 			model.addAttribute("patient", patient);
 			model.addAttribute("report", report);
+			model.addAttribute("triggersNumber", report.getTriggers().size());
+
+			// Building keywords list as a string if the risk is not none
+			if (!report.getRisk().equals("None")) {
+				StringBuilder triggersBuilder = new StringBuilder();
+				report.getTriggers().forEach(trigger -> triggersBuilder.append(trigger + ", "));
+				String triggersString = triggersBuilder.toString().substring(0,
+						triggersBuilder.toString().length() - 2); // Removing the last space and comma for last trigger
+				model.addAttribute("triggersString", triggersString);
+			}
+
+			// Returning the report view, text is set directly in the HTML template and is
+			// handled by Thymeleaf
 			return "report/view";
 		}
 
 		redirectAttributes.addFlashAttribute("message", "Could not generate report for this patient");
-		return "redirect:/search/" + patientId;
+		return "redirect:/" + patientId;
 	}
 }
