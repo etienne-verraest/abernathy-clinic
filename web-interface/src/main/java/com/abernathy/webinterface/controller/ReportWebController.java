@@ -63,6 +63,6 @@ public class ReportWebController {
 		}
 
 		redirectAttributes.addFlashAttribute("message", "Could not generate report for this patient");
-		return "redirect:/" + patientId;
+		return "redirect:/" + patientId + "/";
 	}
 }
