@@ -23,4 +23,10 @@ public class ControllerExceptionHandler {
 		return new ErrorMessage(new Date(), HttpStatus.NOT_FOUND, ex.getMessage());
 	}
 
+	@ExceptionHandler(IncorrectFieldValueException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ErrorMessage handleInvalidFieldValueException(Exception ex, WebRequest request) {
+		return new ErrorMessage(new Date(), HttpStatus.BAD_REQUEST, ex.getMessage());
+	}
+
 }

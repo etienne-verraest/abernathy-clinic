@@ -96,7 +96,7 @@ class NoteDaoTests {
 	}
 
 	@Test
-	void testGetNoteById_ShouldReturn_Note() {
+	void testGetNoteById_ShouldReturn_Note() throws NoteNotFoundException {
 
 		// ARRANGE
 		when(noteRepositoryMock.findById("Note_1")).thenReturn(Optional.of(noteMock));
@@ -109,13 +109,10 @@ class NoteDaoTests {
 	}
 
 	@Test
-	void testGetNoteById_ShouldReturn_Null() {
-
-		// ARRANGE
-		when(noteRepositoryMock.findById(anyString())).thenReturn(Optional.empty());
+	void testGetNoteById_ShouldReturn_Null() throws NoteNotFoundException {
 
 		// ACT
-		Note response = noteDaoMock.getNoteById("Note_FVIJDSODNDSX");
+		Note response = noteDaoMock.getNoteById(null);
 
 		// ASSERT
 		assertThat(response).isNull();

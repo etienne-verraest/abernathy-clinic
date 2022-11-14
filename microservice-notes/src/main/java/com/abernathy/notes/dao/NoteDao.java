@@ -47,7 +47,6 @@ public class NoteDao {
 	 *
 	 * @param noteId								String : The Id of the note (MongoDB Object ID)
 	 * @return										Returns the note if it exists
-	 * @throws NoteNotFoundException				Thrown if the note doesn't exist
 	 */
 	public Note getNoteById(String noteId) {
 		Optional<Note> note = noteRepository.findById(noteId);
