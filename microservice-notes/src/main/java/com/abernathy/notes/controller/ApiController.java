@@ -23,6 +23,8 @@ import com.abernathy.notes.model.Note;
 import com.abernathy.notes.model.dto.NoteDto;
 import com.abernathy.notes.util.ValidationErrorBuilderUtil;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("api/")
 public class ApiController {
@@ -37,6 +39,7 @@ public class ApiController {
 	 * @return										A List<Note> concerning the patient
 	 * @throws PatientNotFoundException				Thrown if Patient with given ID was not found
 	 */
+	@ApiOperation(value = "Get notes for a given patient")
 	@GetMapping("notes/{patientId}")
 	public List<Note> getPatientHistory(@PathVariable String patientId) throws PatientNotFoundException {
 		return noteDao.getNotesByPatientId(patientId);
@@ -49,6 +52,7 @@ public class ApiController {
 	 * @return										Returns the note
 	 * @throws NoteNotFoundException				Thrown if the Note was not found
 	 */
+	@ApiOperation(value = "Get a note by its ID")
 	@GetMapping("note/{noteId}")
 	public Note getNote(@PathVariable String noteId) throws NoteNotFoundException {
 		return noteDao.getNoteById(noteId);
@@ -62,6 +66,7 @@ public class ApiController {
 	 * @throws PatientNotFoundException             	Thrown if Patient with given ID was not found
 	 * @throws IncorrectFieldValueException				Thrown if one (or more) fields are incorrect
 	 */
+	@ApiOperation(value = "Add a note")
 	@PostMapping("notes")
 	public Note addNoteToPatientHistory(@Valid @RequestBody NoteDto noteDto, Errors errors)
 			throws PatientNotFoundException, IncorrectFieldValueException {
@@ -84,6 +89,7 @@ public class ApiController {
 	 * @throws PatientNotFoundException					Thrown if the Patient was not found
 	 * @throws IncorrectFieldValueException				Thrown if one (or more) fields are incorrect
 	 */
+	@ApiOperation(value = "Update a note by its ID")
 	@PutMapping("notes/{noteId}")
 	public Note updateNoteById(@PathVariable String noteId, @Valid @RequestBody NoteDto noteDto, Errors errors)
 			throws NoteNotFoundException, PatientNotFoundException, IncorrectFieldValueException {
@@ -103,6 +109,7 @@ public class ApiController {
 	 * @return										Returns true if the deletion was successful
 	 * @throws NoteNotFoundException				Thrown if the Note was not found
 	 */
+	@ApiOperation(value = "Delete a note by its ID")
 	@DeleteMapping("notes/{noteId}")
 	public boolean deleteNoteById(@PathVariable String noteId) throws NoteNotFoundException {
 		return noteDao.deleteNote(noteId);
@@ -115,6 +122,7 @@ public class ApiController {
 	 * @return										Returns true if the deletion was successful
 	 * @throws PatientNotFoundException				Thrown if the Patient was not found
 	 */
+	@ApiOperation(value = "Delete all notes for a given patient")
 	@DeleteMapping("notes/all/{patientId}")
 	public boolean deleteAllNotesForPatientId(@PathVariable String patientId) throws PatientNotFoundException {
 		return noteDao.deleteAllNotesForPatient(patientId);
