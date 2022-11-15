@@ -10,6 +10,13 @@ Microservice is built with the followings technologies :
 
 Thanks to the Spring Framework, it is possible to use dependencies such as *Feign*, that acts as an intermediary for microservices to communicate
 
+# Setting up the microservice
+To make the microservice working, you must follow the following steps :
+- Create a MongoDB database named `abernathyclinic`
+- In the new MongoDB database, create a collection named : `notes`
+
+That's all ! You can now add notes to patient microservice.
+
 # API Specifications
 **Microservice url is configured to serve datas on `localhost:9002/api/`**. <br>
 In order to function, patient microservice must be started.
