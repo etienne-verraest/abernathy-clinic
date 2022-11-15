@@ -21,10 +21,10 @@ If you have followed the steps carefully, database is now created and your are a
 # API Specifications
 **Microservice url is configured to serve datas on `localhost:9001/api/`**.
 
-## GET `/patients` (without parameters)
+## **GET `/patients`**
 This route gets the list of every patients registered in database
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9001/api/patients`**
 ```json
 [
@@ -58,10 +58,10 @@ This route gets the list of every patients registered in database
 ]
 ```
 
-## GET `/patients?firstName=[firstName]&lastName=[lastName]`
+## **GET `/patients?firstName=[firstName]&lastName=[lastName]`**
 This route gets patients that are registered with the given first name and last name.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9001/api/patients?firstName=Etienne&lastName=Dupont`**
 ```json
 [
@@ -85,11 +85,19 @@ This route gets patients that are registered with the given first name and last 
     }
 ]
 ```
+### **Unsuccessful response example**
+```json
+{
+    "time": "2022-11-15T17:43:24.868+00:00",
+    "status": "NOT_FOUND",
+    "message": "The patient with given first name and last name was not found"
+}
+```
 
-## GET `/patients/{id}`
+## **GET `/patients/{id}`**
 This route gets a patient by its ID. Only one patient will be returned from this route, if the patient exists.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9001/api/patients/RD11971/`**
 ```json
 {
@@ -103,10 +111,13 @@ This route gets a patient by its ID. Only one patient will be returned from this
 }
 ```
 
-## POST `/patients/`
+### **Unsuccessful response example**
+This route returns null (This is voluntary and facilitates communication with other microservices).
+
+## **POST `/patients/`**
 This route creates a patient. Fields are validated and a custom error message will be returned if there are any. 
 
-### Content example
+### **Successful content example**
 **URL : `localhost:9001/api/patients/`**
 ```json
 {
@@ -118,12 +129,21 @@ This route creates a patient. Fields are validated and a custom error message wi
     "phone": "XXX-XXX-XXXX"
 }
 ```
-**Gender takes either the value of M (for "Male") or F (for "Female").**
+**Note :** Gender takes either the value of M (for *"Male"*) or F (for *"Female"*).
 
-## PUT `/patients/{id}/`
+### **400 Bad request on malformed content**
+```json
+{
+    "time": "2022-11-15T17:44:11.668+00:00",
+    "status": "BAD_REQUEST",
+    "message": "The following fields are incorrect : phone"
+}
+```
+
+## **PUT `/patients/{id}/`**
 This route updates a patient given its ID. Fields are validated and a custom error message will be returned if there are any. The following JSON can be used in the body to send datas (the same that is used on POST route) :
 
-### Content example
+### **Successful content example**
 **URL : `localhost:9001/api/patients/RD11971/`**
 ```json
 {
@@ -136,13 +156,31 @@ This route updates a patient given its ID. Fields are validated and a custom err
 }
 ```
 
-## DELETE `/patients/{id}`
+### **400 Bad Request on malformed content**
+```json
+{
+    "time": "2022-11-15T17:45:57.779+00:00",
+    "status": "BAD_REQUEST",
+    "message": "The following fields are incorrect : phone"
+}
 
+```
+
+## **DELETE `/patients/{id}`**
 This route deletes a patient from database, given its ID. It also deletes attached notes from the notes microservice (if there are any).
 A message will indicate if the operation is successful.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9001/api/patients/ED88884/`**
 ```json
 Patient with id 'ED88884' was successfully deleted. Notes attached to him were also deleted.
+```
+
+### **404 Not found on wrong patient ID**
+```json
+{
+    "time": "2022-11-15T17:46:48.108+00:00",
+    "status": "NOT_FOUND",
+    "message": "Patient with given ID was not found."
+}
 ```
