@@ -10,6 +10,14 @@ Microservice is built with the followings technologies :
 
 Thanks to the Spring Framework, it is possible to use dependencies such as *Feign*, that acts as an intermediary for microservices to communicate
 
+# Setting up the microservice
+In order to store datas, you must create a MySQL database with the following steps with your terminal :
+- Create a database named `abernathyclinic` : `CREATE DATABASE abernathyclinic;` (default credentials are root:root and can be changed in `application.properties`)
+- Move to the new database using : `USE abernathyclinic;`
+- Load the schema (found in `src/main/resources`) using : `SOURCE schema.sql;`
+
+If you have followed the steps carefully, database is now created and your are able to do CRUD operations on Patients Microservice.
+
 # API Specifications
 **Microservice url is configured to serve datas on `localhost:9001/api/`**.
 
