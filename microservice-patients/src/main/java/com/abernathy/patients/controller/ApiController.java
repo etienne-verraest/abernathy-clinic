@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.exceptions.IncorrectFieldValueException;
+import com.abernathy.patients.exceptions.MicroserviceNotStartedException;
 import com.abernathy.patients.exceptions.PatientNotFoundException;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 import com.abernathy.patients.util.ValidationErrorBuilderUtil;
 
+import feign.FeignException;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -143,25 +145,35 @@ public class ApiController {
 	 * @param id										String : The id of the patient to deleted
 	 * @return											A message if the operation was successfull
 	 * @throws PatientNotFoundException					Thrown if nobody was found given
+	 * @throws MicroserviceNotStartedException
 	 */
 	@ApiOperation(value = "Delete a patient given its ID")
 	@DeleteMapping("/patients/{id}")
-	public String deletePatient(@PathVariable String id) throws PatientNotFoundException {
+	public String deletePatient(@PathVariable String id)
+			throws PatientNotFoundException, MicroserviceNotStartedException {
 
 		// Checking if patient with given id exists
 		if (id != null && patientDao.getPatientById(id) != null) {
 
-			boolean notesDeleted = notesProxy.deleteAllNotesForPatientId(id);
-			// If patient had notes, we display a message to tell that the deletion was
-			// successful
-			if (patientDao.deletePatient(id) && notesDeleted) {
-				return String.format(
-						"Patient with id '%s' was successfully deleted. Notes attached to him were also deleted.", id);
+			int notesNumber;
+			try {
+				notesNumber = notesProxy.getPatientHistory(id).size();
+			} catch (FeignException e) {
+				throw new MicroserviceNotStartedException("Notes microservice is not started. Cannot delete patient.");
 			}
 
-			// If there are no notes, we don't mention them.
-			if (patientDao.deletePatient(id) && !notesDeleted) {
-				return String.format("Patient with id '%s' was successfully deleted", id);
+			// Depending on if the patient has note, we do not return the same String
+			if (notesNumber > 0) {
+				boolean notesDeleted = notesProxy.deleteAllNotesForPatientId(id);
+				if (notesDeleted) {
+					patientDao.deletePatient(id);
+					return String.format(
+							"Patient with id '%s' was successfully deleted. Notes attached to him were also deleted.",
+							id);
+				}
+			} else {
+				patientDao.deletePatient(id);
+				return String.format("Patient with id '%s' was successfully deleted.", id);
 			}
 
 		}

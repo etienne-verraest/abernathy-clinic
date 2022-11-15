@@ -1,5 +1,6 @@
 package com.abernathy.patients.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -12,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -21,12 +24,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import com.abernathy.patients.bean.NoteBean;
 import com.abernathy.patients.dao.PatientDao;
 import com.abernathy.patients.model.Patient;
 import com.abernathy.patients.model.dto.PatientDto;
 import com.abernathy.patients.proxy.MicroserviceNotesProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import feign.FeignException;
 
 @WebMvcTest(controllers = ApiController.class)
 class ApiControllerTests {
@@ -38,7 +45,7 @@ class ApiControllerTests {
 	private PatientDao patientDaoMock;
 
 	@MockBean
-	MicroserviceNotesProxy notesProxy;
+	private MicroserviceNotesProxy notesProxy;
 
 	private static List<Patient> patientsListMock = new ArrayList<Patient>();
 	private static Patient patientMock;
@@ -166,6 +173,54 @@ class ApiControllerTests {
 
 		// ACT AND ASSERT
 		mockMvc.perform(delete("/api/patients/{id}", "AB10000")).andExpect(status().isOk());
+
+	}
+
+	@Test
+	void testDeletePatient_ShouldReturn_MicroserviceNotStarted() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxy.getPatientHistory("AB10000")).thenThrow(FeignException.class);
+
+		// ACT AND ASSERT
+		mockMvc.perform(delete("/api/patients/{id}", "AB10000"))
+				.andExpect(jsonPath("$.status").value("SERVICE_UNAVAILABLE"));
+
+	}
+
+	@Test
+	void testDeletePatient_HasNotes_ShouldDeleteNotesAndPatient() throws Exception {
+
+		NoteBean note = new NoteBean("Note_1", new Date(), "AB10000", "Patient is a smoker");
+		List<NoteBean> notes = new ArrayList<>(List.of(note));
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxy.getPatientHistory("AB10000")).thenReturn(notes);
+		when(notesProxy.deleteAllNotesForPatientId("AB10000")).thenReturn(true);
+
+		// ACT AND ASSERT
+		MvcResult result = mockMvc.perform(delete("/api/patients/{id}", "AB10000")).andReturn();
+
+		String content = result.getResponse().getContentAsString();
+		assertThat(content).isEqualTo(
+				"Patient with id 'AB10000' was successfully deleted. Notes attached to him were also deleted.");
+
+	}
+
+	@Test
+	void testDeletePatient_HasNoNotes_ShouldDeletePatientOnly() throws Exception {
+
+		// ARRANGE
+		when(patientDaoMock.getPatientById("AB10000")).thenReturn(patientMock);
+		when(notesProxy.getPatientHistory("AB10000")).thenReturn(Collections.emptyList());
+
+		// ACT AND ASSERT
+		MvcResult result = mockMvc.perform(delete("/api/patients/{id}", "AB10000")).andReturn();
+
+		String content = result.getResponse().getContentAsString();
+		assertThat(content).isEqualTo("Patient with id 'AB10000' was successfully deleted.");
 
 	}
 
