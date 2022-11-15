@@ -21,10 +21,10 @@ That's all ! You can now add notes to patient microservice.
 **Microservice url is configured to serve datas on `localhost:9002/api/`**. <br>
 In order to function, patient microservice must be started.
 
-## GET `/notes/{patientId}`
+## **GET `/notes/{patientId}`**
 Get every notes related to a given patient (recognizable by its ID). Response is composed of multiple notes.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9002/api/notes/RD11971/`**
 ```json
 [
@@ -43,10 +43,19 @@ Get every notes related to a given patient (recognizable by its ID). Response is
 ]
 ```
 
-## GET `/note/{noteId}`
+### **404 Not Found**
+```json
+{
+    "time": "2022-11-15T17:54:39.082+00:00",
+    "status": "NOT_FOUND",
+    "message": "Patient with given ID was not found"
+}
+```
+
+## **GET `/note/{noteId}`**
 This route gets a single note, based on the note ID.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9002/api/note/6372910a44d5562320acad2e`**
 ```json
 {
@@ -57,10 +66,13 @@ This route gets a single note, based on the note ID.
 }
 ```
 
-## POST `/notes/`
+### **Unsuccessful response example**
+This route returns null (This is voluntary and facilitates communication with other microservices).
+
+## **POST `/notes/`**
 This route creates a note for a given patient. Patient must exist in order to add notes.
 
-### Content example
+### **Successful content example**
 **URL : `localhost:9002/api/notes`**
 ```json
 {
@@ -69,33 +81,87 @@ This route creates a note for a given patient. Patient must exist in order to ad
 }
 ```
 
-## PUT `/notes/{noteId}`
+### **400 Bad Request**
+```json
+{
+    "time": "2022-11-15T17:56:33.676+00:00",
+    "status": "BAD_REQUEST",
+    "message": "The following fields are incorrect : content"
+}
+```
+
+### **404 Not Found**
+```json
+{
+    "time": "2022-11-15T17:57:02.045+00:00",
+    "status": "NOT_FOUND",
+    "message": "Patient with given ID was not found"
+}
+```
+
+## **PUT `/notes/{noteId}`**
 This route updates a note based on its ID. Patient must exist in order to update the note, and the note must be linked to the given patientID. <br>
 
-### Content example
+### **Successful content example**
 **URL : `localhost:9002/api/notes/6372910a44d5562320acad2e`**
 ```json
 {
   "patientId": "RD11971",
-  "content": "Patient has gained 12 lbs in 1 month"
+  "content": "Patient has gained too much weight in a week"
 }
 ```
 
-## DELETE `/notes/{noteId}`
+### **400 Bad Request**
+```json
+{
+    "time": "2022-11-15T17:56:33.676+00:00",
+    "status": "BAD_REQUEST",
+    "message": "The following fields are incorrect : content"
+}
+```
+
+### **404 Not Found**
+```json
+{
+    "time": "2022-11-15T17:57:02.045+00:00",
+    "status": "NOT_FOUND",
+    "message": "Patient with given ID was not found"
+}
+```
+
+## **DELETE `/notes/{noteId}`**
 This route delete a single note based on its ID. If the operation is successful, a boolean set to true is returned.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9002/api/notes/637290f244d5562320acad2d`**
 ```json
 true
 ```
 
-## DELETE `/notes/all/{patientId}/`
+### **404 Not Found**
+```json
+{
+    "time": "2022-11-15T17:59:38.803+00:00",
+    "status": "NOT_FOUND",
+    "message": "Note with given ObjectID was not found"
+}
+```
+
+## **DELETE `/notes/all/{patientId}/`**
 This route deletes every notes included in the patient history. It is used primarily by the patients microservice when DELETE route is called.
 If the operation is successful, a boolean set to true is returned.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9002/api/notes/all/RD11971`**
 ```json
 true
+```
+
+### **404 Not Found**
+```json
+{
+    "time": "2022-11-15T18:01:32.798+00:00",
+    "status": "NOT_FOUND",
+    "message": "Patient with given ID was not found"
+}
 ```
