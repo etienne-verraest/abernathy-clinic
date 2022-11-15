@@ -131,7 +131,7 @@ This route creates a patient. Fields are validated and a custom error message wi
 ```
 **Note :** Gender takes either the value of M (for *"Male"*) or F (for *"Female"*).
 
-### **400 Bad request on malformed content**
+### **400 Bad Request**
 ```json
 {
     "time": "2022-11-15T17:44:11.668+00:00",
@@ -156,7 +156,7 @@ This route updates a patient given its ID. Fields are validated and a custom err
 }
 ```
 
-### **400 Bad Request on malformed content**
+### **400 Bad Request**
 ```json
 {
     "time": "2022-11-15T17:45:57.779+00:00",
@@ -176,7 +176,16 @@ A message will indicate if the operation is successful.
 Patient with id 'ED88884' was successfully deleted. Notes attached to him were also deleted.
 ```
 
-### **404 Not found on wrong patient ID**
+### **503 Service Unavailable**
+```json
+{
+    "time": "2022-11-15T18:05:28.834+00:00",
+    "status": "SERVICE_UNAVAILABLE",
+    "message": "Notes microservice is not started. Cannot delete patient."
+}
+```
+
+### **404 Not Found**
 ```json
 {
     "time": "2022-11-15T17:46:48.108+00:00",
