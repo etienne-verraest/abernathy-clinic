@@ -12,17 +12,18 @@ Each microservices have their own API specifications, which can be found in the 
 The application has **78 tests** that cover various use cases. The code coverage for the whole application is **84%**. Below, you will find a detailed report of these metrics.
 
 ## Patients microservice
-**The patients microservice contains 19 tests**
+**The patients microservice contains 19 tests.**
 ![](documentation/patients-coverage.png)
 
 ## Notes microservice
-**The notes microservice contains 19 tests**
+**The notes microservice contains 19 tests.**
+<br>
 ![](documentation/notes-coverage.png)
 
 ## Reports microservice
-**The REPORTS microservice contains 13 tests**
+**The reports microservice contains 13 tests.**
 ![](documentation/reports-coverage.png)
 
 ## Web interface
-**The web interface contains 27 tests**
+**The web interface contains 27 tests.**
 ![](documentation/webinterface-coverage.png)
