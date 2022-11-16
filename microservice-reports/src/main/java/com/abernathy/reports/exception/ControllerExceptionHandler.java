@@ -17,4 +17,10 @@ public class ControllerExceptionHandler {
 		return new ErrorMessage(new Date(), HttpStatus.NOT_FOUND, ex.getMessage());
 	}
 
+	@ExceptionHandler(MicroserviceNotStartedException.class)
+	@ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
+	public ErrorMessage handleMicroserviceNotStartedException(Exception ex, WebRequest request) {
+		return new ErrorMessage(new Date(), HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
+	}
+
 }

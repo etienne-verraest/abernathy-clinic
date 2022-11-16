@@ -1,6 +1,8 @@
 package com.abernathy.reports.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -11,15 +13,19 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.abernathy.reports.bean.NoteBean;
 import com.abernathy.reports.bean.PatientBean;
+import com.abernathy.reports.exception.MicroserviceNotStartedException;
 import com.abernathy.reports.model.Report;
 import com.abernathy.reports.proxy.MicroserviceNotesProxy;
 import com.abernathy.reports.proxy.MicroservicePatientsProxy;
+
+import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
 class ReportsGeneratorTests {
@@ -68,6 +74,33 @@ class ReportsGeneratorTests {
 		womanUnder30.setPhone("123-400-5000");
 		womanUnder30.setId("EB11000");
 
+	}
+
+	@Test
+	void testGenerateReports_PatientMicroserviceNotStartedException() {
+
+		// ARRANGE
+		when(patientsProxy.getPatientById(anyString())).thenThrow(FeignException.class);
+
+		// ACT
+		Executable executable = () -> reportsGenerator.generateReports("RandomPatientId");
+
+		// ASSERT
+		assertThrows(MicroserviceNotStartedException.class, executable);
+	}
+
+	@Test
+	void testGenerateReports_NoteMicroserviceNotStartedException() {
+
+		// ARRANGE
+		when(patientsProxy.getPatientById(anyString())).thenReturn(patientOver30);
+		when(notesProxy.getPatientHistory(anyString())).thenThrow(FeignException.class);
+
+		// ACT
+		Executable executable = () -> reportsGenerator.generateReports("RandomPatientId");
+
+		// ASSERT
+		assertThrows(MicroserviceNotStartedException.class, executable);
 	}
 
 	@Test

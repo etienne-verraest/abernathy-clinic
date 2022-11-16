@@ -12,10 +12,10 @@ Thanks to the Spring Framework, it is possible to use dependencies such as *Feig
 # API Specifications
 **Microservice url is configured to serve datas on `localhost:9003/api/`**.
 
-## GET `/reports/generate/{patientId}`
+## **GET `/reports/generate/{patientId}`**
 This is the only route and it returns datas to assemble the report with complete sentences.
 
-### Response example
+### **Successful response example**
 **URL : `localhost:9003/api/reports/generate/RD11971`**
 ```json
 {
@@ -30,6 +30,24 @@ This is the only route and it returns datas to assemble the report with complete
         "smoker",
         "weight"
     ]
+}
+```
+
+### **503 Service Unavailable**
+```json
+{
+    "time": "2022-11-16T10:02:40.400+00:00",
+    "status": "SERVICE_UNAVAILABLE",
+    "message": "Patient microservice is not started. Cannot generate report."
+}
+```
+
+### **404 Not Found**
+```json
+{
+    "time": "2022-11-16T10:03:41.144+00:00",
+    "status": "NOT_FOUND",
+    "message": "Patient with given ID was not found"
 }
 ```
 
