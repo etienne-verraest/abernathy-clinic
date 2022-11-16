@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abernathy.reports.exception.MicroserviceNotStartedException;
 import com.abernathy.reports.exception.PatientNotFoundException;
 import com.abernathy.reports.generator.ReportsGenerator;
 import com.abernathy.reports.model.Report;
@@ -22,19 +23,21 @@ public class ApiController {
 	/**
 	 * Generate a diabete risk report given a patient ID
 	 *
-	 * @param patientId								String : The Patient ID
-	 * @return										Returns a Report object containing datas if generation is successful
-	 * @throws PatientNotFoundException				Thrown if patient was not found
+	 * @param patientId									String : The Patient ID
+	 * @return											Returns a Report object containing datas if generation is successful
+	 * @throws PatientNotFoundException					Thrown if patient was not found
+	 * @throws MicroserviceNotStartedException			Thrown if microservices are not started
 	 */
 	@ApiOperation(value = "Generate a diabete risk report given a patient ID")
 	@GetMapping("/reports/generate/{patientId}")
-	public Report generateReport(@PathVariable String patientId) throws PatientNotFoundException {
+	public Report generateReport(@PathVariable String patientId)
+			throws PatientNotFoundException, MicroserviceNotStartedException {
 
-		if (reportsGenerator.generateReports(patientId) != null) {
+		if (patientId != null) {
 			return reportsGenerator.generateReports(patientId);
 		}
 
-		return null;
+		throw new PatientNotFoundException("Patient with given ID was not found");
 	}
 
 }

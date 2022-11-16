@@ -13,11 +13,14 @@ import org.springframework.stereotype.Component;
 
 import com.abernathy.reports.bean.NoteBean;
 import com.abernathy.reports.bean.PatientBean;
+import com.abernathy.reports.exception.MicroserviceNotStartedException;
 import com.abernathy.reports.exception.PatientNotFoundException;
 import com.abernathy.reports.model.Report;
 import com.abernathy.reports.proxy.MicroserviceNotesProxy;
 import com.abernathy.reports.proxy.MicroservicePatientsProxy;
 import com.abernathy.reports.util.TriggersList;
+
+import feign.FeignException;
 
 @Component
 public class ReportsGenerator {
@@ -34,12 +37,22 @@ public class ReportsGenerator {
 	 *
 	 * @param patientId									String : The patient's ID
 	 * @throws PatientNotFoundException					Thrown if the patient was not found
+	 * @throws MicroserviceNotStartedException
 	 */
-	public Report generateReports(String patientId) throws PatientNotFoundException {
+	public Report generateReports(String patientId) throws PatientNotFoundException, MicroserviceNotStartedException {
 
 		if (patientId != null) {
 
-			PatientBean patient = patientsProxy.getPatientById(patientId);
+			// Getting the patient and its informations
+			PatientBean patient;
+			try {
+				patient = patientsProxy.getPatientById(patientId);
+			} catch (FeignException e) {
+				throw new MicroserviceNotStartedException(
+						"Patient microservice is not started. Cannot generate report.");
+			}
+
+			// Checking if patient is null
 			if (patient == null) {
 				throw new PatientNotFoundException("Patient with given ID was not found");
 			}
@@ -48,7 +61,12 @@ public class ReportsGenerator {
 			int age = calculateAge(patient.getDateOfBirth());
 
 			// Getting notes related to the patients
-			List<NoteBean> notes = notesProxy.getPatientHistory(patientId);
+			List<NoteBean> notes;
+			try {
+				notes = notesProxy.getPatientHistory(patientId);
+			} catch (FeignException e) {
+				throw new MicroserviceNotStartedException("Note microservice is not started. Cannot generate report.");
+			}
 
 			if (notes != null && !notes.isEmpty()) {
 				// Find triggers from notes
