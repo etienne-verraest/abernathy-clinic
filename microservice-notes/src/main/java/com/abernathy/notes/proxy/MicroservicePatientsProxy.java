@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.abernathy.notes.bean.PatientBean;
 
-@FeignClient(name = "microservice-patients", url = "localhost:9001")
+@FeignClient(name = "microservice-patients", url = "${patients.url}")
 public interface MicroservicePatientsProxy {
 
 	@GetMapping("api/patients/{id}")

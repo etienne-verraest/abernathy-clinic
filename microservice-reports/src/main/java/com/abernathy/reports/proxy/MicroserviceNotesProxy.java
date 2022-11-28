@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.abernathy.reports.bean.NoteBean;
 
-@FeignClient(name = "microservice-notes", url = "localhost:9002")
+@FeignClient(name = "microservice-notes", url = "${notes.url}")
 public interface MicroserviceNotesProxy {
 
 	@GetMapping("api/notes/{patientId}")

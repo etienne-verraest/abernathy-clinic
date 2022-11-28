@@ -1,0 +1,402 @@
+{
+	"info": {
+		"_postman_id": "0b7c7184-31d7-453b-b787-fb16c6820462",
+		"name": "Abernathy Clinic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22392228"
+	},
+	"item": [
+		{
+			"name": "Patients Microservice",
+			"item": [
+				{
+					"name": "Get Patients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9001/api/patients",
+							"host": [
+								"localhost"
+							],
+							"port": "9001",
+							"path": [
+								"api",
+								"patients"
+							],
+							"query": [
+								{
+									"key": "firstName",
+									"value": "Lewis",
+									"disabled": true
+								},
+								{
+									"key": "lastName",
+									"value": "Hamilz",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Etienne\",\r\n    \"lastName\": \"Dupont\",\r\n    \"dateOfBirth\": \"1998-12-31\",\r\n    \"gender\": \"M\",\r\n    \"address\": \"123 rue des Pommiers\",\r\n    \"phone\": \"789-101-1332\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9001/api/patients",
+							"host": [
+								"localhost"
+							],
+							"port": "9001",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update patient",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Etienne\",\r\n    \"lastName\": \"Verraest\",\r\n    \"dateOfBirth\": \"1964-02-16\",\r\n    \"gender\": \"F\",\r\n    \"address\": \"123\",\r\n    \"phone\": \"000-000-0001\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9001/api/patients/:patientId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9001",
+							"path": [
+								"api",
+								"patients",
+								":patientId",
+								""
+							],
+							"variable": [
+								{
+									"key": "patientId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete patient",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"DSDDS\",\r\n    \"lastName\": \"VQSDDSSD\",\r\n    \"dateOfBirth\": \"1964-02-16\",\r\n    \"gender\": \"M\",\r\n    \"address\": \"123\",\r\n    \"phone\": \"000-000-0001\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9001/api/patients/:patientId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9001",
+							"path": [
+								"api",
+								"patients",
+								":patientId",
+								""
+							],
+							"variable": [
+								{
+									"key": "patientId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9001/api/patients/:patientId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9001",
+							"path": [
+								"api",
+								"patients",
+								":patientId",
+								""
+							],
+							"variable": [
+								{
+									"key": "patientId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notes Microservice",
+			"item": [
+				{
+					"name": "Get patient's history",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9002/api/notes/:patientId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"notes",
+								":patientId",
+								""
+							],
+							"variable": [
+								{
+									"key": "patientId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single note",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9002/api/note/:noteId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"note",
+								":noteId",
+								""
+							],
+							"variable": [
+								{
+									"key": "noteId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add notes to patient history",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientId\": \"ED26113\",\r\n  \"content\": \"Patient has gained 10 lbs in 1 month\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9002/api/notes",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update note",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientId\": \"RD11971\",\r\n  \"content\": \"Patient has gained 12 lbs in 1 month\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9002/api/notes/:noteId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"notes",
+								":noteId",
+								""
+							],
+							"variable": [
+								{
+									"key": "noteId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete note",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientId\": \"OT9996\",\r\n  \"practitioner\": \"Dr. ClarkE\",\r\n  \"content\": \"Giving him some anti depressants\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9002/api/notes/:noteId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"notes",
+								":noteId",
+								""
+							],
+							"variable": [
+								{
+									"key": "noteId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all notes for user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientId\": \"OT9996\",\r\n  \"practitioner\": \"Dr. ClarkE\",\r\n  \"content\": \"Giving him some anti depressants\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9002/api/notes/all/:patientId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"notes",
+								"all",
+								":patientId",
+								""
+							],
+							"variable": [
+								{
+									"key": "patientId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports microservice",
+			"item": [
+				{
+					"name": "Generate Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9003/api/reports/generate/:patientId/",
+							"host": [
+								"localhost"
+							],
+							"port": "9003",
+							"path": [
+								"api",
+								"reports",
+								"generate",
+								":patientId",
+								""
+							],
+							"variable": [
+								{
+									"key": "patientId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

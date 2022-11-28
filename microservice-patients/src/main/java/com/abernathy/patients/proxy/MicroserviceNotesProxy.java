@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.abernathy.patients.bean.NoteBean;
 
-@FeignClient(name = "microservice-notes", url = "localhost:9002")
+@FeignClient(name = "microservice-notes", url = "${notes.url}")
 public interface MicroserviceNotesProxy {
 
 	@DeleteMapping("api/notes/all/{patientId}")
