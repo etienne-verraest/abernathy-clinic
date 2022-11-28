@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.abernathy.webinterface.bean.NoteBean;
 import com.abernathy.webinterface.dto.NoteDto;
 
-@FeignClient(name = "microservice-notes", url = "localhost:9002")
+@FeignClient(name = "microservice-notes", url = "${notes.url}")
 public interface MicroserviceNotesProxy {
 
 	@GetMapping("api/notes/{patientId}")

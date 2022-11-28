@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.abernathy.webinterface.bean.PatientBean;
 import com.abernathy.webinterface.dto.PatientDto;
 
-@FeignClient(name = "microservice-patients", url = "localhost:9001")
+@FeignClient(name = "microservice-patients", url = "${patients.url}")
 public interface MicroservicePatientsProxy {
 
 	@GetMapping("api/patients")

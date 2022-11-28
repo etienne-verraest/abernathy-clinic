@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.abernathy.webinterface.bean.ReportBean;
 
-@FeignClient(name = "microservice-reports", url = "localhost:9003")
+@FeignClient(name = "microservice-reports", url = "${reports.url}")
 public interface MicroserviceReportsProxy {
 
 	@GetMapping("api/reports/generate/{patientId}")
